@@ -11,21 +11,21 @@
     <!-- TO:DO ADD SOME SORT OF TOOLBAR -->
 
 
-
-
-
         <!-- FrameLayout used to show Fragments containing various options -->
-       <FrameLayout
-           android:layout_width="match_parent"
-           android:layout_height="match_parent">
-           <android.support.v7.widget.Toolbar
-               android:id="@+id/toolbar"
-               android:layout_width="match_parent"
-               android:layout_height="?attr/actionBarSize"
-               android:background="?attr/colorPrimary"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"/>
 
 
         </FrameLayout>
+
+
+
 
         <!-- ListView describing Drawer -->
         <!--TO:DO drawer on the right side-->
@@ -33,10 +33,12 @@
             android:id="@+id/searchingDrawer"
             android:layout_width="240dp"
             android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
             android:layout_gravity="start"
-            android:choiceMode="singleChoice"/>
-        <!-- dp - density-independent pixel -->
-    <!--czy to potrzebne??? <include layout="@layout/content_main" />-->
+            android:choiceMode="singleChoice"
+            android:background="#FFFFFF"
+            />
+
 
     </android.support.v4.widget.DrawerLayout>
 

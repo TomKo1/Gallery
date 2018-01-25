@@ -55,18 +55,19 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDrawerClosed(View drawerView){
+              //  Toast.makeText(getApplicationContext(),"Zamknieto Menu",Toast.LENGTH_SHORT).show();
 
 
             }
 
             @Override
             public void onDrawerOpened(View drawerView){
-
+              //  Toast.makeText(getApplicationContext(),"Otworzono Menu",Toast.LENGTH_SHORT).show();
             }
 
         };
 
-        wholeDrawer.setDrawerListener(drawerToggle);
+        wholeDrawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
        // wholeDrawer.openDrawer(Gravity.START);
@@ -74,15 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*
-    toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-            // TO:DO add other positions like Support & author
-                return true;
-            }
-        });
-     */
+
 
 
     // this method places menu options to menu
@@ -103,9 +96,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Toast.makeText(this,"Settings",Toast.LENGTH_SHORT).show();
-
-            return true;
+            Toast.makeText(this,"Opcje",Toast.LENGTH_SHORT).show();
+        }else if(id == R.id.author){
+            Toast.makeText(this,"Author",Toast.LENGTH_SHORT).show();
         }else{
             //showing menu
             Toast.makeText(this,"Menu",Toast.LENGTH_SHORT).show();
@@ -116,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /*
+        called when activity start-ups is complete (after onStart() and onRestoreInstanceStete()
+
+
+     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -123,6 +121,12 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle.syncState();
     }
 
+    /*
+        called by the system when thwe device configuration changes while your activity is running
+
+
+
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
