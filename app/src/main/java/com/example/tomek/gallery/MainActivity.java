@@ -1,24 +1,92 @@
 package com.example.tomek.gallery;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    // reference to DrawerLayout to show app options
+    private ListView searchingDrawer;
+    private DrawerLayout wholeDrawer;
+    private String[]titles; // array representing string shown in drawer
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        titles=getResources().getStringArray(R.array.title);
+        searchingDrawer=(ListView)findViewById(R.id.searchingDrawer);
+        //setting sample content of Drawer using ArrayAdapter
+        searchingDrawer.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1,titles));
+
+        //reference to whole DrawerLayout
+        wholeDrawer=(DrawerLayout)findViewById(R.id.drawerLayout);
+
+
+
+
+
+        //Toolbar options
+       Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
+        //displaying hamburger button
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+
+        // making the hamburger work
+        drawerToggle=new ActionBarDrawerToggle(this,wholeDrawer,R.string.app_name,R.string.app_name){
+
+            @Override
+            public void onDrawerClosed(View drawerView){
+
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView){
+
+            }
+
+        };
+
+        wholeDrawer.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
+       // wholeDrawer.openDrawer(Gravity.START);
 
 
     }
 
+    /*
+    toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+            // TO:DO add other positions like Support & author
+                return true;
+            }
+        });
+     */
+
+
+    // this method places menu options to menu
+    //called only once, the first time the options menu is created
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -26,18 +94,43 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Toast.makeText(this,"Settings",Toast.LENGTH_SHORT).show();
+
             return true;
+        }else{
+            //showing menu
+            Toast.makeText(this,"Menu",Toast.LENGTH_SHORT).show();
+            wholeDrawer.openDrawer(Gravity.START);
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+
+
+
 }

@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Gallery</string>
     <string name="action_settings">Settings</string>
+    <string name="helpfulMessage">This is main activity beneath Drawer </string>
+    <string-array name="title">
+        <item>Lista</item>
+        <item>Lista1</item>
+        <item>Lista2</item>
+    </string-array>
+
+
+    <string name="trial_com">Here trial com</string>
+
 </resources>
