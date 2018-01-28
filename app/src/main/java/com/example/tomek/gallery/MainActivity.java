@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
         searchingDrawer=(ListView)findViewById(R.id.searchingDrawer);
         //setting sample content of Drawer using ArrayAdapter
         searchingDrawer.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1,titles));
-
         //reference to whole DrawerLayout
         wholeDrawer=(DrawerLayout)findViewById(R.id.drawerLayout);
 
