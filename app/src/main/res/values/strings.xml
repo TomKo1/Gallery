@@ -13,4 +13,5 @@
     <string name="author">Author</string>
     <string name="unsupportedQuery">Unsupported Query</string>
     <string name="insert_failure">Error while inserting to the database</string>
+    <string name="sample_pic">This is sample pic</string>
 </resources>
