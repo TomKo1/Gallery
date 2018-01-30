@@ -119,6 +119,11 @@ public class MainActivity extends AppCompatActivity {
             public void onDrawerOpened(View drawerView){
               //  Toast.makeText(getApplicationContext(),"Otworzono Menu",Toast.LENGTH_SHORT).show();
                 invalidateOptionsMenu();//declare that options menu has changed , so should be redeclared
+
+
+                //TODO here is the best opton to close keyboard...
+
+
             }
 
         };

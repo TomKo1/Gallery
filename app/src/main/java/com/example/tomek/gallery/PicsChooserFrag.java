@@ -1,10 +1,12 @@
 package com.example.tomek.gallery;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 
 // TODO make this fragment's layout (XML) pretty : )
@@ -26,7 +28,7 @@ public class PicsChooserFrag extends Fragment {
         RelativeLayout relative=(RelativeLayout)inflater.inflate(R.layout.image_chooser,viewGroup,false);
         return relative;
     }
-
+//????????????????????????????????????????
     public PicsChooserFrag(){
         super();
         keyboard_on=false;
@@ -36,8 +38,24 @@ public class PicsChooserFrag extends Fragment {
     //onREsume - when user see the fragment  once more
 
     @Override
-    public void onStop(){
-        super.onStop();
+    public void onPause(){
+        super.onPause();
+
+        //create static class ;) with this code
+        //InputMethodManager is the central point of the system that manages interaction
+        //between all other parts
+        Activity activity=getActivity();
+        InputMethodManager inputMethodManager=(InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //find the currently focused view, so we can grab the correct window token from it
+        View view=activity.getCurrentFocus();
+
+        //if there is none view focused it returns null
+        if(view==null){
+            view=new View(activity);
+        }
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+
+
     }
 
     @Override
