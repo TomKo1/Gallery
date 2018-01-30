@@ -4,11 +4,12 @@
     <string name="helpfulMessage">This is main activity beneath Drawer </string>
     <string-array name="title">
         <item>All pictures</item>
-        <item>Lista1</item>
+        <item>Look for Pics in Android</item>
         <item>Lista2</item>
     </string-array>
 
-
+    <string name="not_working">would be input for tags</string>
+    <string name="hint_name">Type Picture name</string>
     <string name="trial_com">Here trial com</string>
     <string name="author">Author</string>
     <string name="unsupportedQuery">Unsupported Query</string>

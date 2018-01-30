@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         //associated with this activity
 
         /*
-123
          */
         getFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener(){
@@ -81,7 +80,11 @@ public class MainActivity extends AppCompatActivity {
 
                         if(fragment instanceof PicsFragment ){
                             // actions when PicsFragment was added
-                            Toast.makeText(getBaseContext(),"PicsFragmentAdded",Toast.LENGTH_SHORT).show();//getBaseContext ???
+                            Toast.makeText(getBaseContext(),"PicsFragment",Toast.LENGTH_SHORT).show();//getBaseContext ???
+
+                        }else if(fragment instanceof PicsChooserFrag){
+                            Toast.makeText(getBaseContext(),"PicsChooserFrag",Toast.LENGTH_SHORT).show();//getBaseContext ???
+
                         }
 
                     }
@@ -142,8 +145,12 @@ public class MainActivity extends AppCompatActivity {
     private void selectItem(int position){
         Fragment fragmentToPut=null;
         switch(position){
-            case 1:
+            case 0:
                 fragmentToPut=new PicsFragment();
+                break;
+            case 1:
+                fragmentToPut=new PicsChooserFrag();
+                Toast.makeText(this,"Choosing...", Toast.LENGTH_LONG).show();
                 break;
             default:
                 //TODO change this
