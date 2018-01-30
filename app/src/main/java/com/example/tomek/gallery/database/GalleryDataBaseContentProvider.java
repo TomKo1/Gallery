@@ -75,11 +75,11 @@ public class GalleryDataBaseContentProvider extends ContentProvider {
      */
 
 
-    // TO:DO think about which var can be null's : )
-    // TO:DO add option of sharing meme
-    // TO:DO add recyclerview displaying all pics
-    // TO:DO add some sort of 'likes'
-    // TO:DO make static import
+    // TODO think about which var can be null's : )
+    // TODO add option of sharing meme
+    // TODO add recyclerview displaying all pics
+    // TODO add some sort of 'likes'
+    // TODO make static import
 
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
