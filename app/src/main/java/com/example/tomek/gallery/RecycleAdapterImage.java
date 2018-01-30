@@ -3,7 +3,6 @@ package com.example.tomek.gallery;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -40,7 +39,7 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
     public void onBindViewHolder(RecycleAdapterImage.ViewHolder holder, int position) {
         CardView cardView=holder.cardView;
         ImageView imageView=(ImageView)cardView.findViewById(R.id.picture);
-        imageView.setImageDrawable(cardView.getResources().getDrawable(R.drawable.Oreo1));
+        imageView.setImageDrawable(cardView.getResources().getDrawable(R.drawable.android));
     }
 
     // returns size of data set held by the adapter

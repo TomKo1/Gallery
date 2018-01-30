@@ -39,7 +39,7 @@
         <!-- ListView describing Drawer -->
         <!--TO:DO drawer on the right side-->
         <ListView
-            android:id="@+id/searchingDrawer"
+            android:id="@+id/drawer_list_view"
             android:layout_width="240dp"
             android:layout_height="match_parent"
             android:layout_marginTop="?attr/actionBarSize"

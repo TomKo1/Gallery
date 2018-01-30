@@ -1,7 +1,9 @@
 package com.example.tomek.gallery;
 
+import android.app.FragmentTransaction;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -12,19 +14,26 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 
 //TODO show Frgment by clicking option in Drawer !!!
+//TODO add options of searching pic
+//TODO add option to store pics in DB
+//TODO add options to view all pics...
 
 public class MainActivity extends AppCompatActivity {
 
-    // reference to DrawerLayout to show app options
-    private ListView searchingDrawer;
+    // ListView representing options in the drawer
+    private ListView listViewOfDrawer;
+    // reference to whole DrawerLayout containing ToolBar, mainFragment and ListView with drawer options
     private DrawerLayout wholeDrawer;
     private String[]titles; // array representing string shown in drawer
+    //ActionBarDrawerToggler provides a handy way to tie together the funcionallyty of DrawerLAyout and the framework ActionBar
+    //  "makes the hamburger work"
     private ActionBarDrawerToggle drawerToggle;
 
     @Override
@@ -33,9 +42,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         titles=getResources().getStringArray(R.array.title);
-        searchingDrawer=(ListView)findViewById(R.id.searchingDrawer);
+
+        //operations concerning ListView with options of drawer
+        listViewOfDrawer=(ListView)findViewById(R.id.drawer_list_view);
         //setting sample content of Drawer using ArrayAdapter
-        searchingDrawer.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1,titles));
+        listViewOfDrawer.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1,titles));
+        //adding listview listener to the ListView representing "drawer" options
+        listViewOfDrawer.setOnItemClickListener(new DrawerClickListener());
+
         //reference to whole DrawerLayout
         wholeDrawer=(DrawerLayout)findViewById(R.id.drawerLayout);
 
@@ -66,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                         if(fragment instanceof PicsFragment ){
-
+                            // actions when PicsFragment was added
+                            Toast.makeText(getBaseContext(),"PicsFragmentAdded",Toast.LENGTH_SHORT).show();//getBaseContext ???
                         }
 
                     }
@@ -93,26 +108,58 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDrawerClosed(View drawerView){
               //  Toast.makeText(getApplicationContext(),"Zamknieto Menu",Toast.LENGTH_SHORT).show();
-
-
+                super.onDrawerClosed(drawerView);
+                invalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerOpened(View drawerView){
               //  Toast.makeText(getApplicationContext(),"Otworzono Menu",Toast.LENGTH_SHORT).show();
+                invalidateOptionsMenu();//declare that options menu has changed , so should be redeclared
             }
 
         };
 
+
         wholeDrawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-       // wholeDrawer.openDrawer(Gravity.START);
+
 
 
     }
 
+    // implementation of "OnItemClickListViewListener" interface
+    private class DrawerClickListener implements ListView.OnItemClickListener{
 
+        @Override
+        public void onItemClick(AdapterView<?> praent,View view, int position,long id){
+
+            selectItem(position);
+        }
+    }
+
+    private void selectItem(int position){
+        Fragment fragmentToPut=null;
+        switch(position){
+            case 1:
+                fragmentToPut=new PicsFragment();
+                break;
+            default:
+                //TODO change this
+                fragmentToPut=new PicsFragment();// default
+                Toast.makeText(this,"Option doesn't work yet :(",Toast.LENGTH_SHORT).show();
+        }
+        //we replace the fragment ...
+        FragmentTransaction fragTran=getFragmentManager().beginTransaction();
+        fragTran.replace(R.id.main_fragment,fragmentToPut,"fragment");
+        fragTran.addToBackStack(null);
+        //selects standard transaction animation for this transaction
+        fragTran.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragTran.commit();
+        //we close the drawer
+        wholeDrawer.closeDrawer(listViewOfDrawer,false);
+    }
 
 
     // this method places menu options to menu
