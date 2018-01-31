@@ -1,5 +1,6 @@
 package com.example.tomek.gallery;
 
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -121,13 +122,13 @@ public class MainActivity extends AppCompatActivity {
                 invalidateOptionsMenu();//declare that options menu has changed , so should be redeclared
 
 
-                //TODO here is the best opton to close keyboard...
+                //TODO here is the best opton to close keyboard...???
+
 
 
             }
 
         };
-
 
         wholeDrawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();

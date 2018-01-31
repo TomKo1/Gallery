@@ -41,19 +41,7 @@ public class PicsChooserFrag extends Fragment {
     public void onPause(){
         super.onPause();
 
-        //create static class ;) with this code
-        //InputMethodManager is the central point of the system that manages interaction
-        //between all other parts
-        Activity activity=getActivity();
-        InputMethodManager inputMethodManager=(InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //find the currently focused view, so we can grab the correct window token from it
-        View view=activity.getCurrentFocus();
-
-        //if there is none view focused it returns null
-        if(view==null){
-            view=new View(activity);
-        }
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+        ViewUtils.hideKeyBoard(getActivity());
 
 
     }
