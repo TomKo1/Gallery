@@ -36,7 +36,7 @@ public class DatabaseDescription {
 
         // names of columns in daatbase
         public static final String COLUMN_PIC_="pic";
-
+        public static final String COLUMN_PIC_NAME="name";
 
         //creates Uri adress of specific Pic
         public static Uri createUri(long id){

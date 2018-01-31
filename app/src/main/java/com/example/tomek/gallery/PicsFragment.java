@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 
 public class PicsFragment extends Fragment {
 
+
+
     // creates and returns the view hierarchy associated with the fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle){

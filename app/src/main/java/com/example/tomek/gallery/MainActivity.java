@@ -122,9 +122,9 @@ public class MainActivity extends AppCompatActivity {
                 invalidateOptionsMenu();//declare that options menu has changed , so should be redeclared
 
 
-                //TODO here is the best opton to close keyboard...???
+                //TODO modify so that keyboard is closed only when it is opened
 
-
+                ViewUtils.hideKeyBoard(MainActivity.this); //qualified this
 
             }
 

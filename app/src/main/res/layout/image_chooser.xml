@@ -68,6 +68,14 @@
         android:layout_below="@+id/pic_preview"
         android:layout_toLeftOf="@id/chose_pic"
         android:layout_marginTop="13dp" />
+    <Button
+        android:id="@+id/save_pic"
+        android:layout_width="110dp"
+        android:layout_height="45dp"
+        android:layout_alignRight="@id/chose_pic"
+        android:layout_below="@id/chose_pic"
+        android:text="@string/save_pic"
+        android:layout_marginTop="13dp" />
 
 
 
