@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.tomek.gallery.R;
@@ -35,8 +36,8 @@ public class GalleryDataBaseContentProvider extends ContentProvider {
     private static final UriMatcher uriMatcher=new UriMatcher(UriMatcher.NO_MATCH);
 
     // consts used to recognize the operation
-    private static final int ONE_PIC=1;//operation concerning only 1 pic
-    private static final int WHOLE_TABLE=2;//operation on the whole table
+    public static final int ONE_PIC=1;//operation concerning only 1 pic
+    public static final int WHOLE_TABLE=2;//operation on the whole table
 
     // static block configurating UriMAtcher object
     //static block is being called only one when the class is initialized/loaded
@@ -83,7 +84,6 @@ public class GalleryDataBaseContentProvider extends ContentProvider {
 
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-
         //SQLiteQueryBuilder helps us to build a query
         SQLiteQueryBuilder queryBuilder=new SQLiteQueryBuilder();
         // this builder is concerning our pics table
@@ -131,9 +131,12 @@ public class GalleryDataBaseContentProvider extends ContentProvider {
 
         Uri newPicUri=null;
 
+        Log.i("info: ","attempt to insert in ContentProvider");
+
+        Log.i("info about matching","whole uri: " +uri+" "+ uriMatcher.match(uri)+" and WHOLE_TABLE is: "+WHOLE_TABLE);
         switch(uriMatcher.match(uri)){
             case WHOLE_TABLE:
-
+                Log.i("info 2 :  ","attempt 2  to insert in ContentProvider");
                 // insert new pic to database
                 long insRowId=dbHelper.getWritableDatabase().insert(DatabaseDescription.Picture.TABLE_NAME_,null,contentValues);
 

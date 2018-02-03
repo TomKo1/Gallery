@@ -27,10 +27,11 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //SQL creating appropriate table
-        final String CREATE_TABLE_SQL_="CREATE_TABLE "+ DatabaseDescription.Picture.TABLE_NAME_+" ("+
+        final String CREATE_TABLE_SQL_="CREATE TABLE "+ DatabaseDescription.Picture.TABLE_NAME_+" ("+
                 DatabaseDescription.Picture._ID+" integer primary key, "+
                 DatabaseDescription.Picture.COLUMN_PIC_NAME+" TEXT, "+
-                DatabaseDescription.Picture.COLUMN_PIC_+ " BLOB);";
+                DatabaseDescription.Picture.COLUMN_PIC_PATH+ " TEXT, " +
+                DatabaseDescription.Picture.COLUMN_DESCRIPTION+" TEXT );";
 
         sqLiteDatabase.execSQL(CREATE_TABLE_SQL_);
 

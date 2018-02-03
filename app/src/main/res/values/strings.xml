@@ -16,4 +16,5 @@
     <string name="insert_failure">Error while inserting to the database</string>
     <string name="sample_pic">This is sample pic</string>
     <string name="save_pic">Save</string>
+    <string name="image_description">Image description</string>
 </resources>

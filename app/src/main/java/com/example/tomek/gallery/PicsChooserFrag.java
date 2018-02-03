@@ -3,28 +3,29 @@ package com.example.tomek.gallery;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
+import com.example.tomek.gallery.database.DatabaseDescription;
 import com.example.tomek.gallery.database.GalleryDataBaseContentProvider;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -49,8 +50,12 @@ public class PicsChooserFrag extends Fragment {
     //preview of the choosen pic
     private ImageView preview;
 
+    //reference to the EditText with description and name from user
+    private EditText etDescription, etName;
+
+
     //reference to ContentProvider
-    private GalleryDataBaseContentProvider contentProvider;
+    private ContentResolver contentResolver;
 
     // creates and returns the view hierarchy associated with the fragment
     @Override
@@ -60,12 +65,15 @@ public class PicsChooserFrag extends Fragment {
         // we init. reference to appropriate view
         preview=(ImageView)relative.findViewById(R.id.pic_preview);
 
-        //ContentProvider reference
-        contentProvider=new GalleryDataBaseContentProvider();
+        //ContentResolver reference
+        contentResolver=getActivity().getContentResolver();
 
         // we gain references to appriopriate buttons and add them onclicklisteners
         btnChoose=(Button)relative.findViewById(R.id.chose_pic);
         btnSave=(Button)relative.findViewById(R.id.save_pic);
+
+        etDescription=(EditText)relative.findViewById(R.id.image_description);
+        etName=(EditText)relative.findViewById(R.id.image_name);
 
         btnChoose.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -105,6 +113,7 @@ public class PicsChooserFrag extends Fragment {
 
     // saving pics to the SD's dir
     //TODO make it so that pics doesn't repeat
+    //TODO make this method shorter
     private void savePicToSD(){
          Toast.makeText(getActivity(),"Saving...",Toast.LENGTH_SHORT).show();
         //getting BitMap from ImageView
@@ -114,32 +123,58 @@ public class PicsChooserFrag extends Fragment {
         String root= Environment.getExternalStorageDirectory().toString();
         Toast.makeText(getActivity(),root,Toast.LENGTH_LONG).show();
         File dir=new File(root+DIR_NAME_);
-
-
-
          dir.mkdirs();
-
         String fileNam="Image-"+FILE_COUNTER_+".jpg";
         FILE_COUNTER_=FILE_COUNTER_.add(BigInteger.valueOf(1));
         File fileSav=new File(dir,fileNam);
-
-
         //I don't use try-with-resources because of API lvl
         FileOutputStream out=null;
-        try{
-            out=new FileOutputStream(fileSav);
 
-            //saving compressed file ot the dir
-            imageToSave.compress(Bitmap.CompressFormat.JPEG,90,out);
-            out.flush();
-            out.close();
-        }catch(Exception ex) {
-            ex.printStackTrace();
-            Toast.makeText(getActivity(), "Error during saving.", Toast.LENGTH_SHORT).show();
+        if (getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            Log.i("Info","Asking for permission to write if not granted yet");
+            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},4200);
+        }else {
+
+//        askForWriteStoragePer();
+
+            try {
+                //fileSav.createNewFile();            //  ???????!!!! do I need it?
+                out = new FileOutputStream(fileSav);
+                //saving compressed file ot the dir
+                imageToSave.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                out.flush();
+                out.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Log.e("Error", "Error during saving to SD");
+                Toast.makeText(getActivity(), "Error during saving.", Toast.LENGTH_SHORT).show();
+            }
         }
+        //String wholeTableS=String.valueOf(GalleryDataBaseContentProvider.WHOLE_TABLE);
+
+        // we create URI referrimng to whole table
+        Uri uri=DatabaseDescription.Picture.CONTENT_URI;
+
+
+        // we insert this data to database - we should to this as a thread???
+
+        String wholePath=root+"/"+fileNam;
+
+        ContentValues values=new ContentValues();
+
+        //name - inserted by user in TextView
+        values.put(DatabaseDescription.Picture.COLUMN_PIC_NAME,etName.getText().toString());
+        //path -> wholePath to read image from file system
+        values.put(DatabaseDescription.Picture.COLUMN_PIC_PATH,wholePath);
+        //description - inserted by user in TextView
+        values.put(DatabaseDescription.Picture.COLUMN_DESCRIPTION,etDescription.getText().toString());
+
+        Log.i("info PicsChooserFrag: ","before insert in PicsChooserFrag");
+        contentResolver.insert(uri,values);
+
+
 
         Toast.makeText(getActivity(),"Image saved.",Toast.LENGTH_LONG).show();
-
     }
 
 
