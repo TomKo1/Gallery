@@ -22,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.1"
+            android:id="@+id/card_view_des"
             android:text="@string/sample_pic"
             android:textAlignment="center"/>
 

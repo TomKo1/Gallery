@@ -97,7 +97,7 @@ public class GalleryDataBaseContentProvider extends ContentProvider {
 
                 break;
             case WHOLE_TABLE: // we chose whole table...
-
+                    Log.e("Error","Operation for whole table was now written");
                 break;
             default:
                 unsupportedOperation();
