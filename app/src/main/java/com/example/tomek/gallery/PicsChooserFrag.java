@@ -120,7 +120,21 @@ public class PicsChooserFrag extends Fragment {
         Bitmap imageToSave=((BitmapDrawable)preview.getDrawable()).getBitmap();
 
         // getting env var representing path
-        String root= Environment.getExternalStorageDirectory().toString();
+       // String root= Environment.getExternalStorageDirectory().toString();
+
+
+        //TODO change this strange structure
+        String root=null;
+        //this dir is not accessed by the user and is automatically
+        //uninstalled after removing the app
+        try {
+             root = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString();
+        }catch(NullPointerException ex){
+            ex.printStackTrace();
+            Log.e("Error","NullPointerException while savign the Pic");
+            return;
+        }
+
         Toast.makeText(getActivity(),root,Toast.LENGTH_LONG).show();
         File dir=new File(root+DIR_NAME_);
          dir.mkdirs();
@@ -174,7 +188,7 @@ public class PicsChooserFrag extends Fragment {
 
 
 
-        Toast.makeText(getActivity(),"Image saved.",Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(),"Image saved."+wholePath,Toast.LENGTH_LONG).show();
     }
 
 
