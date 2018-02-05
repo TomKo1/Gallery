@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -66,7 +67,8 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
 
 
         if(image==null){
-            Log.e("Error","The image is null!");
+            //Log.e("Error","The image is null!");
+            Toast.makeText(activity, "Bitmapa to null", Toast.LENGTH_SHORT).show();
         }
 
 
