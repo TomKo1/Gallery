@@ -38,7 +38,7 @@ public class DatabaseDescription {
         public static final String COLUMN_PIC_PATH="path";
         public static final String COLUMN_PIC_NAME="name";
         public static final String COLUMN_DESCRIPTION="description";
-
+        public static final String COLUMN_FNAME="file_name";
         //creates Uri adress of specific Pic
         public static Uri createUri(long id){
             //withAppendeddIF appends the given ID to the end of the path

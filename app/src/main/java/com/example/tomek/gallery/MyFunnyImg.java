@@ -26,12 +26,14 @@ public class MyFunnyImg {
     private String imgPath;
     private String name;
     private String description;
+    private String fileName;
 //    private Activity activity;
 
-    public MyFunnyImg(String imgPath, String name, String description) {
+    public MyFunnyImg(String imgPath, String name, String description,String fileName) {
         this.imgPath = imgPath;
         this.name = name;
         this.description = description;
+        this.fileName=fileName;
         //this.activity=activity;
     }
 
@@ -72,20 +74,22 @@ public class MyFunnyImg {
         //TODO - I have to pass fileName as 2 argument in File :)
         //TODO - first pic doesn't display - strange
         //TODO - why is warning about storing (writing) display even though I am only choosing ->???
+        //TODO - make another column with file name ( for example Image-0.jpg)
+        /*
         StringTokenizer tokenizer=new StringTokenizer(imgPath,"/");
         String fileName=null;
         while(tokenizer.hasMoreElements()){
-            fileName=tokenizer.nextToken();
-        }
-
+           fileName=tokenizer.nextToken();
+        t}*/
+        Log.i("Loading",fileName);
         File file=new File(dir, fileName);
+
         if (activity.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Log.i("Info","Asking for permission to read if not granted yet");
             ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},4200);
         }else {
 
             try {
-
                 FileInputStream in = new FileInputStream(file);
                 bitmap = BitmapFactory.decodeStream(in);
                 if(bitmap==null)Toast.makeText(activity,"In RecyclerView bitmap is null1",Toast.LENGTH_SHORT).show();

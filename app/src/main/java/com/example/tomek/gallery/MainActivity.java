@@ -68,23 +68,12 @@ public class MainActivity extends AppCompatActivity {
                       Fragment fragment=fragmentManager.findFragmentByTag("fragment");
 
 
-                        /*******************************************************88888\
-                         *
-                         *
-                         *
-                         *
-                         * !!!@@#!!#!@#!@#!!@
-                         */
-
-
-
 
                         if(fragment instanceof PicsFragment ){
-                            // actions when PicsFragment was added
-                            Toast.makeText(getBaseContext(),"PicsFragment",Toast.LENGTH_SHORT).show();//getBaseContext ???
+                            // actions when PicsFragment was added to the BackStack
 
                         }else if(fragment instanceof PicsChooserFrag){
-                            Toast.makeText(getBaseContext(),"PicsChooserFrag",Toast.LENGTH_SHORT).show();//getBaseContext ???
+                           // actions when PicsChooserFrag was added to the BackStack
 
                         }
 
@@ -111,15 +100,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDrawerClosed(View drawerView){
-              //  Toast.makeText(getApplicationContext(),"Zamknieto Menu",Toast.LENGTH_SHORT).show();
                 super.onDrawerClosed(drawerView);
                 invalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerOpened(View drawerView){
-              //  Toast.makeText(getApplicationContext(),"Otworzono Menu",Toast.LENGTH_SHORT).show();
-                invalidateOptionsMenu();//declare that options menu has changed , so should be redeclared
+              invalidateOptionsMenu();//declare that options menu has changed , so should be redeclared
 
 
                 //TODO modify so that keyboard is closed only when it is opened
@@ -156,12 +143,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 1:
                 fragmentToPut=new PicsChooserFrag();
-                Toast.makeText(this,"Choosing...", Toast.LENGTH_LONG).show();
                 break;
             default:
                 //TODO change this
                 fragmentToPut=new PicsFragment();// default
-                Toast.makeText(this,"Option doesn't work yet :(",Toast.LENGTH_SHORT).show();
         }
         //we replace the fragment ...
         FragmentTransaction fragTran=getFragmentManager().beginTransaction();
@@ -193,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Toast.makeText(this,"Options",Toast.LENGTH_SHORT).show();
+           // Toast.makeText(this,"Options",Toast.LENGTH_SHORT).show();
 
             //TODO make it like a private method
             /*
@@ -204,10 +189,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         }else if(id == R.id.author){
-            Toast.makeText(this,"Author",Toast.LENGTH_SHORT).show();
+           // Toast.makeText(this,"Author",Toast.LENGTH_SHORT).show();
         }else{
             //showing menu
-            Toast.makeText(this,"Menu",Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(this,"Menu",Toast.LENGTH_SHORT).show();
             wholeDrawer.openDrawer(Gravity.START);
         }
 

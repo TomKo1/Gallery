@@ -147,23 +147,21 @@ public class PicsChooserFrag extends Fragment {
         if (getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Log.i("Info","Asking for permission to write if not granted yet");
             ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},4200);
-        }else {
-
-//        askForWriteStoragePer();
-
-            try {
-                //fileSav.createNewFile();            //  ???????!!!! do I need it?
-                out = new FileOutputStream(fileSav);
-                //saving compressed file ot the dir
-                imageToSave.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                out.flush();
-                out.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                Log.e("Error", "Error during saving to SD");
-                Toast.makeText(getActivity(), "Error during saving.", Toast.LENGTH_SHORT).show();
-            }
         }
+
+        try {
+            //fileSav.createNewFile();            //  ???????!!!! do I need it?
+            out = new FileOutputStream(fileSav);
+            //saving compressed file ot the dir
+            imageToSave.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Log.e("Error", "Error during saving to SD");
+            Toast.makeText(getActivity(), "Error during saving.", Toast.LENGTH_SHORT).show();
+        }
+
         //String wholeTableS=String.valueOf(GalleryDataBaseContentProvider.WHOLE_TABLE);
 
         // we create URI referrimng to whole table
@@ -178,10 +176,13 @@ public class PicsChooserFrag extends Fragment {
 
         //name - inserted by user in TextView
         values.put(DatabaseDescription.Picture.COLUMN_PIC_NAME,etName.getText().toString());
+        //file Name...
+        values.put(DatabaseDescription.Picture.COLUMN_FNAME,fileNam);
         //path -> wholePath to read image from file system
         values.put(DatabaseDescription.Picture.COLUMN_PIC_PATH,wholePath);
         //description - inserted by user in TextView
         values.put(DatabaseDescription.Picture.COLUMN_DESCRIPTION,etDescription.getText().toString());
+
 
         Log.i("info PicsChooserFrag: ","before insert in PicsChooserFrag");
         contentResolver.insert(uri,values);

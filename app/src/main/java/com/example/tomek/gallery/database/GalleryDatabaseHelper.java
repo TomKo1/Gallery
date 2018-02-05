@@ -30,6 +30,7 @@ public class GalleryDatabaseHelper extends SQLiteOpenHelper {
         final String CREATE_TABLE_SQL_="CREATE TABLE "+ DatabaseDescription.Picture.TABLE_NAME_+" ("+
                 DatabaseDescription.Picture._ID+" integer primary key, "+
                 DatabaseDescription.Picture.COLUMN_PIC_NAME+" TEXT, "+
+                DatabaseDescription.Picture.COLUMN_FNAME+" TEXT,"+
                 DatabaseDescription.Picture.COLUMN_PIC_PATH+ " TEXT, " +
                 DatabaseDescription.Picture.COLUMN_DESCRIPTION+" TEXT );";
 

@@ -69,10 +69,12 @@ public class PicsFragment extends Fragment {
         Cursor cursor=contentResolver.query(uri,null,null,null,null,null);
 
         while(cursor.moveToNext()){
+            //TODO maybe a method???
             String path=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_PIC_PATH));
             String name=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_PIC_NAME));
+            String fileName=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_FNAME));
             String description=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_DESCRIPTION));
-            funnyImagesList.add(new MyFunnyImg(path,name,description));
+            funnyImagesList.add(new MyFunnyImg(path,name,description,fileName));
         }
     }
 

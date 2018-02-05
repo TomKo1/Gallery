@@ -96,8 +96,9 @@ public class GalleryDataBaseContentProvider extends ContentProvider {
                 queryBuilder.appendWhere(DatabaseDescription.Picture.TABLE_NAME_+"="+uri.getLastPathSegment());
 
                 break;
-            case WHOLE_TABLE: // we chose whole table...
-                    Log.e("Error","Operation for whole table was now written");
+            case WHOLE_TABLE:
+                    // we can take here additional steps for query related to whole table
+                    // in this case we doesn't append any WHERE in the SQL
                 break;
             default:
                 unsupportedOperation();
