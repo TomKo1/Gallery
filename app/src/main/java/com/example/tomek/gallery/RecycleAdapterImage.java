@@ -66,13 +66,6 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
         String name=argsToShow.get(position).getName();
 
 
-        if(image==null){
-            //Log.e("Error","The image is null!");
-            Toast.makeText(activity, "Bitmapa to null", Toast.LENGTH_SHORT).show();
-        }
-
-
-
 
         CardView cardView=holder.cardView;
         ImageView imageView=(ImageView)cardView.findViewById(R.id.picture);

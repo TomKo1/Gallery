@@ -1,10 +1,9 @@
 package com.example.tomek.gallery;
 
-import android.app.Activity;
+
 import android.app.FragmentTransaction;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -18,14 +17,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+
 
 
 //TODO show Frgment by clicking option in Drawer !!!
 //TODO add options of searching pic
-//TODO add option to store pics in DB
-//TODO add options to view all pics...
-
+//TODO handle screen orientation changes
+//TODO add custo ListView in drawer with edittext to search
+//TODO !!!!! make optimatization while reading data from DB !!!!
+//TODO   !!! make loading work - images get mixed !!!!
 public class MainActivity extends AppCompatActivity {
 
     // ListView representing options in the drawer

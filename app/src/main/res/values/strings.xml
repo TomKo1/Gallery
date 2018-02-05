@@ -5,7 +5,6 @@
     <string-array name="title">
         <item>All pictures</item>
         <item>Look for Pics in Android</item>
-        <item>Lista2</item>
     </string-array>
 
     <string name="not_working">would be input for tags</string>
@@ -17,4 +16,6 @@
     <string name="sample_pic">This is sample pic</string>
     <string name="save_pic">Save</string>
     <string name="image_description">Image description</string>
+    <string name="error_reading">No text specified</string>
+    <string name="some_long_sample_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</string>
 </resources>
