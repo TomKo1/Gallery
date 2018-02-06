@@ -87,6 +87,8 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
     // loads BitMap into ImageView using glide
     private void loadBitmap(ImageView imageView,MyFunnyImg toShow){
 
+
+        //TODO change this strange construction
         String root=null;
         try {
             root = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString();
@@ -101,7 +103,6 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
         File dir=new File(root+"/saved_images");
 
         File file=new File(dir,toShow.getFileName());
-        //Log.e("Loading: ", toShow.getPath());
         Glide.with(activity).load(file).into(imageView);
 
     }

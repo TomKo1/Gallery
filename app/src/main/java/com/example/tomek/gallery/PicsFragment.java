@@ -57,10 +57,9 @@ public class PicsFragment extends Fragment {
     }
 
 
+    //TODO make it more efficiently - maybe in a UI thread ???
     private void fetchDataFromDb(){
 
-        //TODO read image from SD dymanically while creating views??
-        //uri for whole Table
         Uri uri= DatabaseDescription.Picture.CONTENT_URI;
 
         //query for ContentResolver

@@ -42,14 +42,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        titles=getResources().getStringArray(R.array.title);
+       //* titles=getResources().getStringArray(R.array.title);
 
         //operations concerning ListView with options of drawer
-        listViewOfDrawer=(ListView)findViewById(R.id.drawer_list_view);
+        //*listViewOfDrawer=(ListView)findViewById(R.id.drawer_list_view);
         //setting sample content of Drawer using ArrayAdapter
-        listViewOfDrawer.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1,titles));
+        //*listViewOfDrawer.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1,titles));
         //adding listview listener to the ListView representing "drawer" options
-        listViewOfDrawer.setOnItemClickListener(new DrawerClickListener());
+        //*listViewOfDrawer.setOnItemClickListener(new DrawerClickListener());
 
         //reference to whole DrawerLayout
         wholeDrawer=(DrawerLayout)findViewById(R.id.drawerLayout);

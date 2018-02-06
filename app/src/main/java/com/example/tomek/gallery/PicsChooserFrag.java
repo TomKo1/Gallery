@@ -42,7 +42,7 @@ import java.math.BigInteger;
 public class PicsChooserFrag extends Fragment {
 
     public final String DIR_NAME_="/saved_images";
-    private static BigInteger FILE_COUNTER_=new BigInteger("0");
+
     //TODO imageVIewTOByte to stroe a pic in the database
     //TODO add photo making and basic editing (with system editor)
     //reference to the button to choose & save
@@ -138,8 +138,7 @@ public class PicsChooserFrag extends Fragment {
         Toast.makeText(getActivity(),root,Toast.LENGTH_LONG).show();
         File dir=new File(root+DIR_NAME_);
          dir.mkdirs();
-        String fileNam="Image-"+FILE_COUNTER_+".jpg";
-        FILE_COUNTER_=FILE_COUNTER_.add(BigInteger.valueOf(1));
+        String fileNam=""+System.currentTimeMillis(); //timestamp as an file name
         File fileSav=new File(dir,fileNam);
         //I don't use try-with-resources because of API lvl
         FileOutputStream out=null;
