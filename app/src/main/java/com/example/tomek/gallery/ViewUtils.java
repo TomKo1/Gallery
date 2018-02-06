@@ -14,6 +14,11 @@ import android.view.inputmethod.InputMethodManager;
 public class ViewUtils {
 
 
+    //TODO add here a method which changes the string on the TOOLBAR
+
+
+
+
     //method to hide SoftInput
     public static void hideKeyBoard(Activity activity){
 

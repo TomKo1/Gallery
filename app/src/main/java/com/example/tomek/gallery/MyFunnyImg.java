@@ -46,7 +46,7 @@ public class MyFunnyImg {
     public String getPath(){
         return imgPath;
     }
-
+    public String getFileName(){return fileName;}
 
     //  method for loading appriopirate image as Bitmap
     public Bitmap loadBitmap(Activity activity){
@@ -104,6 +104,7 @@ public class MyFunnyImg {
         if(bitmap==null)Toast.makeText(activity,"In RecyclerView bitmap is null2",Toast.LENGTH_SHORT).show();
         return bitmap;
     }
+
 
 
 

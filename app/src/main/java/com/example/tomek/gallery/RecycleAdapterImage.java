@@ -3,6 +3,7 @@ package com.example.tomek.gallery;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
+import java.io.File;
 import java.util.List;
 
 /**
@@ -61,17 +65,45 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
     @Override
     public void onBindViewHolder(RecycleAdapterImage.ViewHolder holder, int position) {
         //getting information about this specific image
-        String description=argsToShow.get(position).getDescription();
-        Bitmap image=argsToShow.get(position).loadBitmap(activity);
-        String name=argsToShow.get(position).getName();
-
-
-
         CardView cardView=holder.cardView;
         ImageView imageView=(ImageView)cardView.findViewById(R.id.picture);
-        imageView.setImageBitmap(image);
+
+        MyFunnyImg toShow=argsToShow.get(position);
+
+        //TODO here I want to use Glide to load images
+        //Bitmap image=argsToShow.get(position).loadBitmap(activity);
+        loadBitmap(imageView,toShow);
+
+        String description=toShow.getDescription();
+        String name=toShow.getName();
+
+
+
+        //imageView.setImageBitmap(image);
         TextView textView=(TextView)cardView.findViewById(R.id.card_view_des);
         textView.setText(description);//description
+    }
+
+    // loads BitMap into ImageView using glide
+    private void loadBitmap(ImageView imageView,MyFunnyImg toShow){
+
+        String root=null;
+        try {
+            root = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString();
+        }catch(NullPointerException ex){
+            ex.printStackTrace();
+            Log.e("Error","NullPointerException while loeadin BitMap");
+        }
+
+
+
+
+        File dir=new File(root+"/saved_images");
+
+        File file=new File(dir,toShow.getFileName());
+        //Log.e("Loading: ", toShow.getPath());
+        Glide.with(activity).load(file).into(imageView);
+
     }
 
 
