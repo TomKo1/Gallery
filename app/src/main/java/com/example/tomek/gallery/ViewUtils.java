@@ -11,6 +11,9 @@ import android.view.inputmethod.InputMethodManager;
  *
  */
 
+
+//TODO change this class so that it is written in Kotlin
+
 public class ViewUtils {
 
 

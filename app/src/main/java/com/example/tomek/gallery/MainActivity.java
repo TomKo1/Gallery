@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
+import android.widget.Toast;
 
 
 //TODO show Frgment by clicking option in Drawer !!!
@@ -26,10 +27,10 @@ import android.widget.ListView;
 //TODO add custo ListView in drawer with edittext to search
 //TODO !!!!! make optimatization while reading data from DB !!!!
 //TODO   !!! make loading work - images get mixed !!!!
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    // ListView representing options in the drawer
-    private ListView listViewOfDrawer;
+    // reference to NavigationView
+    private NavigationView navigationView;
     // reference to whole DrawerLayout containing ToolBar, mainFragment and ListView with drawer options
     private DrawerLayout wholeDrawer;
     private String[]titles; // array representing string shown in drawer
@@ -53,6 +54,14 @@ public class MainActivity extends AppCompatActivity {
 
         //reference to whole DrawerLayout
         wholeDrawer=(DrawerLayout)findViewById(R.id.drawerLayout);
+
+        //reference to NavigationView
+        navigationView=(NavigationView)findViewById(R.id.drawer_list_view);
+
+        //listenr for NavigationView
+        navigationView.setNavigationItemSelectedListener(this);
+
+
 
 
         // config of FragmentManager
@@ -125,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /*
     // implementation of "OnItemClickListViewListener" interface
     private class DrawerClickListener implements ListView.OnItemClickListener{
 
@@ -133,20 +143,30 @@ public class MainActivity extends AppCompatActivity {
 
             selectItem(position);
         }
+    }*/
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item){
+        int id=item.getItemId();
+
+        return selectItem(id);
     }
 
-    private void selectItem(int position){
+    private boolean selectItem(int position){
         Fragment fragmentToPut=null;
         switch(position){
-            case 0:
+            case R.id.all_imgs:
                 fragmentToPut=new PicsFragment();
                 break;
-            case 1:
+            case R.id.chooser:
                 fragmentToPut=new PicsChooserFrag();
+
+                break;
+            case R.id.searcher:
+                Toast.makeText(this,"Not yet defined",Toast.LENGTH_SHORT).show();
                 break;
             default:
-                //TODO change this
-                fragmentToPut=new PicsFragment();// default
+                return false;
         }
         //we replace the fragment ...
         FragmentTransaction fragTran=getFragmentManager().beginTransaction();
@@ -156,7 +176,8 @@ public class MainActivity extends AppCompatActivity {
         fragTran.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragTran.commit();
         //we close the drawer
-        wholeDrawer.closeDrawer(listViewOfDrawer,false);
+        wholeDrawer.closeDrawer(Gravity.LEFT);
+        return true;
     }
 
 
