@@ -16,4 +16,5 @@
     <string name="error_reading">No text specified</string>
     <string name="some_long_sample_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</string>
     <string name="search_imgs">Search for new images</string>
+    <string name="searching_hint">Type here searching phrase</string>
 </resources>

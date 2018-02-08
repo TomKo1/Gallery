@@ -58,6 +58,7 @@ public class PicsFragment extends Fragment {
 
 
     //TODO make it more efficiently - maybe in a UI thread ???
+    // if someone knows how to implement it more efficiently please text me
     private void fetchDataFromDb(){
 
         Uri uri= DatabaseDescription.Picture.CONTENT_URI;
@@ -69,13 +70,16 @@ public class PicsFragment extends Fragment {
 
         while(cursor.moveToNext()){
             //TODO maybe a method???
-            String path=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_PIC_PATH));
-            String name=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_PIC_NAME));
-            String fileName=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_FNAME));
-            String description=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_DESCRIPTION));
-            funnyImagesList.add(new MyFunnyImg(path,name,description,fileName));
+            populateList(cursor);
         }
     }
 
+    private void populateList(Cursor cursor){
+        String path=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_PIC_PATH));
+        String name=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_PIC_NAME));
+        String fileName=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_FNAME));
+        String description=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_DESCRIPTION));
+        funnyImagesList.add(new MyFunnyImg(path,name,description,fileName));
+    }
 
 }

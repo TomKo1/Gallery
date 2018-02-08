@@ -38,5 +38,4 @@ public class ViewUtils {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
 
     }
-
 }

@@ -112,16 +112,12 @@ public class PicsChooserFrag extends Fragment {
 
 
     // saving pics to the SD's dir
-    //TODO make it so that pics doesn't repeat
     //TODO make this method shorter
+    //TODO - this can be done as a thread !!!
     private void savePicToSD(){
          Toast.makeText(getActivity(),"Saving...",Toast.LENGTH_SHORT).show();
         //getting BitMap from ImageView
         Bitmap imageToSave=((BitmapDrawable)preview.getDrawable()).getBitmap();
-
-        // getting env var representing path
-       // String root= Environment.getExternalStorageDirectory().toString();
-
 
         //TODO change this strange structure
         String root=null;
@@ -135,12 +131,11 @@ public class PicsChooserFrag extends Fragment {
             return;
         }
 
-        Toast.makeText(getActivity(),root,Toast.LENGTH_LONG).show();
         File dir=new File(root+DIR_NAME_);
-         dir.mkdirs();
+        dir.mkdirs();
         String fileNam=""+System.currentTimeMillis(); //timestamp as an file name
         File fileSav=new File(dir,fileNam);
-        //I don't use try-with-resources because of API lvl
+
         FileOutputStream out=null;
 
         if (getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -149,7 +144,6 @@ public class PicsChooserFrag extends Fragment {
         }
 
         try {
-            //fileSav.createNewFile();            //  ???????!!!! do I need it?
             out = new FileOutputStream(fileSav);
             //saving compressed file ot the dir
             imageToSave.compress(Bitmap.CompressFormat.JPEG, 90, out);
@@ -157,16 +151,18 @@ public class PicsChooserFrag extends Fragment {
             out.close();
         } catch (Exception ex) {
             ex.printStackTrace();
-            Log.e("Error", "Error during saving to SD");
-            Toast.makeText(getActivity(), "Error during saving.", Toast.LENGTH_SHORT).show();
+            Log.e("PicsChooserFrag", "Error during saving to SD");
+            Toast.makeText(getActivity(), "Error during saving - image not saved", Toast.LENGTH_SHORT).show();
+            return ;
         }
 
-        //String wholeTableS=String.valueOf(GalleryDataBaseContentProvider.WHOLE_TABLE);
+        saveImgInfoToDb(root, fileNam);
+    }
 
+
+    private void saveImgInfoToDb(String root, String fileNam){
         // we create URI referrimng to whole table
         Uri uri=DatabaseDescription.Picture.CONTENT_URI;
-
-
         // we insert this data to database - we should to this as a thread???
 
         String wholePath=root+"/"+fileNam;
@@ -183,13 +179,12 @@ public class PicsChooserFrag extends Fragment {
         values.put(DatabaseDescription.Picture.COLUMN_DESCRIPTION,etDescription.getText().toString());
 
 
-        Log.i("info PicsChooserFrag: ","before insert in PicsChooserFrag");
         contentResolver.insert(uri,values);
 
-
-
         Toast.makeText(getActivity(),"Image saved."+wholePath,Toast.LENGTH_LONG).show();
+
     }
+
 
 
     private void findPicInSystem(){

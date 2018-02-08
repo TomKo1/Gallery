@@ -1,9 +1,11 @@
 package com.example.tomek.gallery;
 
 
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -37,20 +39,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //ActionBarDrawerToggler provides a handy way to tie together the funcionallyty of DrawerLAyout and the framework ActionBar
     //  "makes the hamburger work"
     private ActionBarDrawerToggle drawerToggle;
-//123
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-       //* titles=getResources().getStringArray(R.array.title);
-
-        //operations concerning ListView with options of drawer
-        //*listViewOfDrawer=(ListView)findViewById(R.id.drawer_list_view);
-        //setting sample content of Drawer using ArrayAdapter
-        //*listViewOfDrawer.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1,titles));
-        //adding listview listener to the ListView representing "drawer" options
-        //*listViewOfDrawer.setOnItemClickListener(new DrawerClickListener());
 
         //reference to whole DrawerLayout
         wholeDrawer=(DrawerLayout)findViewById(R.id.drawerLayout);
@@ -68,8 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //getFragmentManager  - returns the FragmentManager for interacting with fragments
         //associated with this activity
 
-        /*
-         */
+        //TODO drawer is lagging
         getFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener(){
                     public void onBackStackChanged(){
@@ -110,12 +102,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDrawerClosed(View drawerView){
                 super.onDrawerClosed(drawerView);
-                invalidateOptionsMenu();
+                //invalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerOpened(View drawerView){
-              invalidateOptionsMenu();//declare that options menu has changed , so should be redeclared
+              //invalidateOptionsMenu();//declare that options menu has changed , so should be redeclared
 
 
                 //TODO modify so that keyboard is closed only when it is opened
@@ -129,55 +121,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         wholeDrawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-
-
-
     }
-
-    /*
-    // implementation of "OnItemClickListViewListener" interface
-    private class DrawerClickListener implements ListView.OnItemClickListener{
-
-        @Override
-        public void onItemClick(AdapterView<?> praent,View view, int position,long id){
-
-            selectItem(position);
-        }
-    }*/
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item){
         int id=item.getItemId();
-
-        return selectItem(id);
-    }
-
-    private boolean selectItem(int position){
-        Fragment fragmentToPut=null;
-        switch(position){
+        switch(id){
             case R.id.all_imgs:
-                fragmentToPut=new PicsFragment();
+                addFragment(new PicsFragment());
                 break;
             case R.id.chooser:
-                fragmentToPut=new PicsChooserFrag();
-
+                addFragment(new PicsChooserFrag());
                 break;
             case R.id.searcher:
-                Toast.makeText(this,"Not yet defined",Toast.LENGTH_SHORT).show();
+                openSearchingDialog();
                 break;
             default:
                 return false;
         }
-        //we replace the fragment ...
+        wholeDrawer.closeDrawer(Gravity.LEFT);
+        return true;
+    }
+
+
+
+    private void openSearchingDialog(){
+
+        AlertDialog.Builder adBuilder= new AlertDialog.Builder(this);
+        View dialogView=getLayoutInflater().inflate(R.layout.searching_dialog,null);
+
+        adBuilder.setTitle("Search for images in Google");
+        adBuilder.setView(dialogView);
+        adBuilder.setPositiveButton("Ok",new  DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which){
+                //TODO make here searching intent
+                Toast.makeText(MainActivity.this,"Button clicked",Toast.LENGTH_SHORT).show();
+            }
+        });
+        adBuilder.setNegativeButton("Cancel",null);
+
+        AlertDialog dialog=adBuilder.create();
+        dialog.show();
+    }
+
+    private void addFragment(Fragment fragmentToAdd){
+        //we replace the fragment
         FragmentTransaction fragTran=getFragmentManager().beginTransaction();
-        fragTran.replace(R.id.main_fragment,fragmentToPut,"fragment");
+        fragTran.replace(R.id.main_fragment,fragmentToAdd,"fragment");
         fragTran.addToBackStack(null);
         //selects standard transaction animation for this transaction
         fragTran.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragTran.commit();
-        //we close the drawer
-        wholeDrawer.closeDrawer(Gravity.LEFT);
-        return true;
     }
 
 
@@ -193,33 +188,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-           // Toast.makeText(this,"Options",Toast.LENGTH_SHORT).show();
-
-            //TODO make it like a private method
-            /*
-            *******************************************************8
-             */
-
-
-
-
-        }else if(id == R.id.author){
-           // Toast.makeText(this,"Author",Toast.LENGTH_SHORT).show();
+         if(id == R.id.author){
+           showAuthorInfo();
         }else{
-            //showing menu
-          //  Toast.makeText(this,"Menu",Toast.LENGTH_SHORT).show();
-            wholeDrawer.openDrawer(Gravity.START);
+             Toast.makeText(this,"How about using menu?",Toast.LENGTH_SHORT).show();
+             wholeDrawer.openDrawer(Gravity.START);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+
+    //shows AlertDialog containing Author info
+    private void showAuthorInfo(){
+
+    }
 
     /*
         called when activity start-ups is complete (after onStart() and onRestoreInstanceStete()
