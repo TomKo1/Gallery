@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         wholeDrawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
+        addFragment(new PicsFragment(),"Gallery"); //TODO this may cause some problems
     }
 
 

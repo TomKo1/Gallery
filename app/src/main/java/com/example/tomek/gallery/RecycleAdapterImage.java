@@ -2,8 +2,13 @@ package com.example.tomek.gallery;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -89,7 +94,7 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
         moreDots.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                showPopUpMenu(view);
+                showPopUpMenu(view, imageView);
             }
         });
 
@@ -104,44 +109,51 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
 
 
     //method shows PopUpMenu
-    private void showPopUpMenu(View view){
+    private void showPopUpMenu(View view, final ImageView imageView){
 
         PopupMenu popup=new PopupMenu(activity,view);
 
         MenuInflater inflater=popup.getMenuInflater();
 
         inflater.inflate(R.menu.single_pic_menu, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                return onSingleMenuItemClick(item, imageView);
+            }
+        });
         popup.show();
     }
 
-
-
-    // class listening to position clicking on single menu list on image
-    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener{
-
-        @Override
-         public boolean onMenuItemClick(MenuItem item){
-            int id=item.getItemId();
-            switch (id){
-                case R.id.share:
-                    ViewUtils.showToast(activity,"Sharing");
-                    shareImgToSocMedia();
-                    break;
-                case R.id.more_info:
-                    ViewUtils.showToast(activity,"Showing more info");
-                    break;
-
-            }
-            return true;
+private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView){
+        int id=item.getItemId();
+        switch (id){
+            case R.id.share:
+                ViewUtils.showToast(activity,"Sharing");
+                Bitmap bitmap=((BitmapDrawable)imageView.getDrawable()).getBitmap();
+                shareImgToSocMedia(bitmap);
+                break;
+            case R.id.more_info:
+                ViewUtils.showToast(activity,"Showing more info");
+                break;
+            default:
+                ViewUtils.showToast(activity,"No such option");
         }
+        return true;
+}
 
 
-    }
 
+    private void shareImgToSocMedia(Bitmap bitmap){
+        String path= MediaStore.Images.Media.insertImage(activity.getContentResolver(),bitmap,"Image","From Gallery");
+        Uri uri=Uri.parse(path);
 
-    private void shareImgToSocMedia(){
-
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("image/*");
+        share.putExtra(Intent.EXTRA_STREAM, uri);
+        share.putExtra(Intent.EXTRA_TEXT, "I found something cool!");
+        activity.startActivity(Intent.createChooser(share, "Share Your Design!"));
     }
 
 
