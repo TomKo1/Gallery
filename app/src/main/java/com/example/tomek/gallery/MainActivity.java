@@ -2,12 +2,16 @@ package com.example.tomek.gallery;
 
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.*;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,11 +21,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
-
 
 //TODO show Frgment by clicking option in Drawer !!!
 //TODO add options of searching pic
@@ -61,26 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //getFragmentManager  - returns the FragmentManager for interacting with fragments
         //associated with this activity
 
-        //TODO drawer is lagging
-        getFragmentManager().addOnBackStackChangedListener(
-                new FragmentManager.OnBackStackChangedListener(){
-                    public void onBackStackChanged(){
-                      FragmentManager fragmentManager=getFragmentManager();
-                      Fragment fragment=fragmentManager.findFragmentByTag("fragment");
 
-
-
-                        if(fragment instanceof PicsFragment ){
-                            // actions when PicsFragment was added to the BackStack
-
-                        }else if(fragment instanceof PicsChooserFrag){
-                           // actions when PicsChooserFrag was added to the BackStack
-
-                        }
-
-                    }
-                }
-        );
 
 
 
@@ -123,56 +106,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item){
-        int id=item.getItemId();
-        switch(id){
-            case R.id.all_imgs:
-                addFragment(new PicsFragment());
-                break;
-            case R.id.chooser:
-                addFragment(new PicsChooserFrag());
-                break;
-            case R.id.searcher:
-                openSearchingDialog();
-                break;
-            default:
-                return false;
-        }
-        wholeDrawer.closeDrawer(Gravity.LEFT);
-        return true;
-    }
+
 
 
 
     private void openSearchingDialog(){
+       final Dialog dialog=new Dialog(this);     // 2 arg may be a style
+        dialog.setContentView(R.layout.searching_dialog);
+        dialog.setTitle("Search in Google");
 
-        AlertDialog.Builder adBuilder= new AlertDialog.Builder(this);
-        View dialogView=getLayoutInflater().inflate(R.layout.searching_dialog,null);
+        Button okBtn=(Button)dialog.findViewById(R.id.searching_dial_OK);
+        Button canBtn=(Button)dialog.findViewById(R.id.searching_dial_Cancle);
 
-        adBuilder.setTitle("Search for images in Google");
-        adBuilder.setView(dialogView);
-        adBuilder.setPositiveButton("Ok",new  DialogInterface.OnClickListener(){
+        okBtn.setOnClickListener(new Button.OnClickListener(){
             @Override
-            public void onClick(DialogInterface dialog, int which){
-                //TODO make here searching intent
-                Toast.makeText(MainActivity.this,"Button clicked",Toast.LENGTH_SHORT).show();
+            public void onClick(View view){
+                EditText edText=(EditText)dialog.findViewById(R.id.searching_phrase);
+                String searchPhras=edText.getText().toString();
+                Uri uri=Uri.parse("http://www.google.com/#q="+searchPhras);
+                Intent intent=new Intent(Intent.ACTION_VIEW,uri);
+                startActivity(intent);
             }
         });
-        adBuilder.setNegativeButton("Cancel",null);
-
-        AlertDialog dialog=adBuilder.create();
+        canBtn.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                dialog.dismiss();
+            }
+        });
         dialog.show();
     }
 
-    private void addFragment(Fragment fragmentToAdd){
-        //we replace the fragment
-        FragmentTransaction fragTran=getFragmentManager().beginTransaction();
-        fragTran.replace(R.id.main_fragment,fragmentToAdd,"fragment");
-        fragTran.addToBackStack(null);
-        //selects standard transaction animation for this transaction
-        fragTran.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragTran.commit();
+
+
+
+    // I created Handler to try to solve drawer lags
+    private void addFragment(final Fragment fragmentToAdd, final String string){
+        Handler handler=new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                //we replace the fragment
+                FragmentTransaction fragTran=getFragmentManager().beginTransaction();
+                fragTran.replace(R.id.main_fragment,fragmentToAdd,"fragment");
+                fragTran.addToBackStack(null);
+                //selects standard transaction animation for this transaction
+                fragTran.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                fragTran.commit();
+                ViewUtils.changeToolbarTitle(MainActivity.this,string);
+            }
+        });
+
     }
 
 
@@ -192,17 +176,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          if(id == R.id.author){
            showAuthorInfo();
         }else{
-             Toast.makeText(this,"How about using menu?",Toast.LENGTH_SHORT).show();
-             wholeDrawer.openDrawer(Gravity.START);
-        }
+             wholeDrawer.openDrawer(Gravity.LEFT);
+         }
 
         return super.onOptionsItemSelected(item);
     }
 
 
+    // I created Handler to try to solve drawer lags
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item){
+        final int id=item.getItemId();
+        Handler handler=new Handler();
+        handler.post(new Runnable(){
+            @Override
+            public void run(){
+                switch(id){
+                    case R.id.all_imgs:
+                        addFragment(new PicsFragment(),"Gallery");
+                        break;
+                    case R.id.chooser:
+                        addFragment(new PicsChooserFrag(),"Search in device");
+                        break;
+                    case R.id.searcher:
+                        openSearchingDialog();
+                        break;
+                    default:
+                        Toast.makeText(MainActivity.this,"No such operation",Toast.LENGTH_SHORT).show();
+                }
+
+            }});
+        wholeDrawer.closeDrawer(Gravity.LEFT);
+        return true;
+    }
+
     //shows AlertDialog containing Author info
     private void showAuthorInfo(){
-
+            Toast.makeText(this,"Author info",Toast.LENGTH_SHORT).show();
     }
 
     /*

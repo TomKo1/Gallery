@@ -51,11 +51,12 @@
         <ImageView
             android:layout_width="@dimen/ic_album_overflow_width"
             android:layout_height="@dimen/ic_album_overflow_height"
-            android:id="@+id/overflow"
+            android:id="@+id/picture_dots"
             android:layout_alignParentRight="true"
             android:layout_below="@id/picture"
             android:layout_marginTop="@dimen/ic_album_overflow_margin_top"
             android:scaleType="centerCrop"
+            android:clickable="true"
             android:src="@drawable/ic_dots"/>
     </RelativeLayout>
 

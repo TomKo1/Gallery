@@ -63,6 +63,7 @@
         android:id="@+id/chose_pic"
         android:layout_width="110dp"
         android:layout_height="45dp"
+        android:text="@string/search_device"
         android:layout_alignLeft="@+id/pic_preview"
         android:layout_alignStart="@+id/pic_preview"
         android:layout_below="@+id/pic_preview"

@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="@dimen/dialog_width"
+    android:layout_height="@dimen/dialog_height">
 
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/edit_text_height"
-        android:hint="@string/searching_hint"/>
+        android:layout_marginTop="20dp"
+        android:layout_width="@dimen/dialog_width"
+        android:layout_height="60dp"
+        android:hint="@string/searching_hint"
+        android:id="@+id/searching_phrase"/>
+
+    <Button
+        android:id="@+id/searching_dial_OK"
+        android:layout_width="86dp"
+        android:layout_height="36dp"
+        android:text="Ok" />
+
+    <Button
+        android:id="@+id/searching_dial_Cancle"
+        android:layout_width="86dp"
+        android:layout_height="36dp"
+        android:text="Cancel" />
 
 </LinearLayout>

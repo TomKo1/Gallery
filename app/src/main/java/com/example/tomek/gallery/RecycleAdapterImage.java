@@ -8,8 +8,13 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,7 +71,8 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
     public void onBindViewHolder(RecycleAdapterImage.ViewHolder holder, int position) {
         //getting information about this specific image
         CardView cardView=holder.cardView;
-        ImageView imageView=(ImageView)cardView.findViewById(R.id.picture);
+        final ImageView imageView=holder.picture;
+        ImageView moreDots=holder.moreDots;
 
         MyFunnyImg toShow=argsToShow.get(position);
 
@@ -75,7 +81,17 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
         loadBitmap(imageView,toShow);
 
         String description=toShow.getDescription();
-        String name=toShow.getName();
+        //String name=toShow.getName();
+
+
+
+
+        moreDots.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                showPopUpMenu(view);
+            }
+        });
 
 
 
@@ -83,6 +99,51 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
         TextView textView=(TextView)cardView.findViewById(R.id.card_view_des);
         textView.setText(description);//description
     }
+
+
+
+
+    //method shows PopUpMenu
+    private void showPopUpMenu(View view){
+
+        PopupMenu popup=new PopupMenu(activity,view);
+
+        MenuInflater inflater=popup.getMenuInflater();
+
+        inflater.inflate(R.menu.single_pic_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
+        popup.show();
+    }
+
+
+
+    // class listening to position clicking on single menu list on image
+    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener{
+
+        @Override
+         public boolean onMenuItemClick(MenuItem item){
+            int id=item.getItemId();
+            switch (id){
+                case R.id.share:
+                    ViewUtils.showToast(activity,"Sharing");
+                    shareImgToSocMedia();
+                    break;
+                case R.id.more_info:
+                    ViewUtils.showToast(activity,"Showing more info");
+                    break;
+
+            }
+            return true;
+        }
+
+
+    }
+
+
+    private void shareImgToSocMedia(){
+
+    }
+
 
     // loads BitMap into ImageView using glide
     private void loadBitmap(ImageView imageView,MyFunnyImg toShow){
@@ -126,11 +187,15 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
         private CardView cardView;  // our images are being displayed in CardView(s)
+        private ImageView moreDots;
+        private ImageView picture;
 
         public ViewHolder(CardView itemView) {
             super(itemView);
 
             cardView=itemView;
+            moreDots=(ImageView)cardView.findViewById(R.id.picture_dots);
+            picture=(ImageView)cardView.findViewById(R.id.picture);
         }
     }
 

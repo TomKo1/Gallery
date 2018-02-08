@@ -1,8 +1,11 @@
 package com.example.tomek.gallery;
 
+
 import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 /**
  *
@@ -21,6 +24,10 @@ public class ViewUtils {
 
 
 
+    // method showing Toast on MainActivity
+    public static void showToast(Activity activity, String string){
+        Toast.makeText(activity, string,Toast.LENGTH_SHORT).show();
+    }
 
     //method to hide SoftInput
     public static void hideKeyBoard(Activity activity){
@@ -38,4 +45,10 @@ public class ViewUtils {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
 
     }
+
+    // set Toolbar title
+    public static void changeToolbarTitle(AppCompatActivity activity,String string){
+        activity.getSupportActionBar().setTitle(string);
+    }
+
 }
