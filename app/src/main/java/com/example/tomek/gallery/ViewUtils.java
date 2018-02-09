@@ -2,9 +2,20 @@ package com.example.tomek.gallery;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -50,5 +61,7 @@ public class ViewUtils {
     public static void changeToolbarTitle(AppCompatActivity activity,String string){
         activity.getSupportActionBar().setTitle(string);
     }
+
+
 
 }

@@ -1,6 +1,7 @@
 package com.example.tomek.gallery;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
@@ -17,12 +18,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //TODO show Frgment by clicking option in Drawer !!!
@@ -175,13 +180,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
          if(id == R.id.author){
-           showAuthorInfo();
+             showAuthorInfo();
         }else{
              wholeDrawer.openDrawer(Gravity.LEFT);
          }
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    //shows info about author
+    private void showAuthorInfo(){
+            String link="<a href=\"http://www.github.com/TomKo1\">Other projects</a>";
+            String message="Created by: TomKo1 - "+link;
+            //TODO - depreciated !
+            Spanned myMessage= Html.fromHtml(message);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(myMessage);
+            builder.setCancelable(true);
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which){
+                       // we just only have button which dismisses
+                    }
+                });
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                alertDialog.show();
+                TextView msgTxt = (TextView) alertDialog.findViewById(android.R.id.message);
+                msgTxt.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+
 
 
     // I created Handler to try to solve drawer lags
@@ -211,10 +241,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    //shows AlertDialog containing Author info
-    private void showAuthorInfo(){
-            Toast.makeText(this,"Author info",Toast.LENGTH_SHORT).show();
-    }
+
 
     /*
         called when activity start-ups is complete (after onStart() and onRestoreInstanceStete()
