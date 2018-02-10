@@ -47,10 +47,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //  "makes the hamburger work"
     private ActionBarDrawerToggle drawerToggle;
 
+    // we create fragment in MainActivity's onCreate method because of efficiency
+    //and if there is a change (for example image was inserted) we change them
+    private PicsFragment picFragment;
+    private PicsChooserFrag picsChooser;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        picFragment=new PicsFragment();
+        picsChooser=new PicsChooserFrag();
 
         //reference to whole DrawerLayout
         wholeDrawer=(DrawerLayout)findViewById(R.id.drawerLayout);
@@ -61,18 +70,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //listenr for NavigationView
         navigationView.setNavigationItemSelectedListener(this);
 
-
-
-
-        // config of FragmentManager
-        //getFragmentManager  - returns the FragmentManager for interacting with fragments
-        //associated with this activity
-
-
-
-
-
-
         //Toolbar options
        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -80,9 +77,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //displaying hamburger button
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-
 
         // making the hamburger work
         drawerToggle=new ActionBarDrawerToggle(this,wholeDrawer,R.string.app_name,R.string.app_name){
@@ -214,6 +208,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+
+
+
     // I created Handler to try to solve drawer lags
     @Override
     public boolean onNavigationItemSelected(MenuItem item){
@@ -224,10 +221,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void run(){
                 switch(id){
                     case R.id.all_imgs:
-                        addFragment(new PicsFragment(),"Gallery");
+
+                        if(picFragment == null) {
+                            ViewUtils.showToast(MainActivity.this,"picsChooser is null!");
+                            picFragment=new PicsFragment();
+                        }
+                        addFragment(picFragment,"Gallery");
                         break;
                     case R.id.chooser:
-                        addFragment(new PicsChooserFrag(),"Search in device");
+                        if(picsChooser == null) {
+                            ViewUtils.showToast(MainActivity.this,"picsChooser is null!");
+                            picsChooser=new PicsChooserFrag();
+                        }
+                        addFragment(picsChooser,"Search in device");
                         break;
                     case R.id.searcher:
                         openSearchingDialog();

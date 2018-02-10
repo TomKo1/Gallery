@@ -41,6 +41,7 @@ import java.math.BigInteger;
 
 public class PicsChooserFrag extends Fragment {
 
+    //TODO delete this var
     public final String DIR_NAME_="/saved_images";
 
     //TODO imageVIewTOByte to stroe a pic in the database
@@ -53,6 +54,8 @@ public class PicsChooserFrag extends Fragment {
     //reference to the EditText with description and name from user
     private EditText etDescription, etName;
 
+    //reference to image_chooser view
+    private RelativeLayout relative;
 
     //reference to ContentProvider
     private ContentResolver contentResolver;
@@ -60,7 +63,7 @@ public class PicsChooserFrag extends Fragment {
     // creates and returns the view hierarchy associated with the fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle){
-        RelativeLayout relative=(RelativeLayout)inflater.inflate(R.layout.image_chooser,viewGroup,false);
+         relative=(RelativeLayout)inflater.inflate(R.layout.image_chooser,viewGroup,false);
 
         // we init. reference to appropriate view
         preview=(ImageView)relative.findViewById(R.id.pic_preview);
@@ -98,8 +101,10 @@ public class PicsChooserFrag extends Fragment {
             @Override
             public void onClick(View view){
 
-                savePicToSD();
+             //   savePicToSD();
 
+                ImageSaver thread=new ImageSaver();//TODO pass them in constructor
+                thread.doInBackground(preview,getActivity(),relative);
             }
         });
 
