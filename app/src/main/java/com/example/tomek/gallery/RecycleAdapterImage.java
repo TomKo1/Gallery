@@ -1,6 +1,7 @@
 package com.example.tomek.gallery;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -73,7 +74,7 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
 
     //called by REcyclerView to display the data at the specified position
     @Override
-    public void onBindViewHolder(RecycleAdapterImage.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecycleAdapterImage.ViewHolder holder,int position) {
         //getting information about this specific image
         CardView cardView=holder.cardView;
         final ImageView imageView=holder.picture;
@@ -89,12 +90,13 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
         //String name=toShow.getName();
 
 
-
+        //TODO ???
+        final int position1=position;
 
         moreDots.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                showPopUpMenu(view, imageView);
+                showPopUpMenu(view, imageView, position1);
             }
         });
 
@@ -108,8 +110,9 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
 
 
 
+    //TODO is this final int "nice"???
     //method shows PopUpMenu
-    private void showPopUpMenu(View view, final ImageView imageView){
+    private void showPopUpMenu(View view, final ImageView imageView,final int position){
 
         PopupMenu popup=new PopupMenu(activity,view);
 
@@ -120,13 +123,13 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                return onSingleMenuItemClick(item, imageView);
+                return onSingleMenuItemClick(item, imageView, position);
             }
         });
         popup.show();
     }
 
-private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView){
+private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int position){
         int id=item.getItemId();
         switch (id){
             case R.id.share:
@@ -136,6 +139,11 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView){
                 break;
             case R.id.more_info:
                 ViewUtils.showToast(activity,"Showing more info");
+                Bitmap bitmap2=((BitmapDrawable)imageView.getDrawable()).getBitmap();
+                showMoreInfo(bitmap2);
+                break;
+            case R.id.delete_img:
+                deleteImg(position);
                 break;
             default:
                 ViewUtils.showToast(activity,"No such option");
@@ -143,6 +151,38 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView){
         return true;
 }
 
+    private void deleteImg(int position){
+
+        argsToShow.remove(position);
+        notifyDataSetChanged();
+
+        removeImgFile(argsToShow.get(position).getPath());
+
+
+
+    }
+
+
+    private void removeImgFile(String path){
+
+    }
+
+
+
+
+
+
+
+    private void showMoreInfo(Bitmap bitmap){
+          ImageDetail nextFrag=new ImageDetail();
+          activity.getFragmentManager().beginTransaction().
+                  replace(R.id.main_fragment,nextFrag,"Details frag").
+                  addToBackStack(null).
+                  setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).
+                  commit();
+
+
+    }
 
 
     private void shareImgToSocMedia(Bitmap bitmap){

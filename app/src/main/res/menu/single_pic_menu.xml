@@ -4,8 +4,9 @@
     android:id="@+id/share"
     android:title="@string/share_img"/>
     <item
+        android:id="@+id/delete_img"
+        android:title="@string/delete_img"/>
+    <item
         android:id="@+id/more_info"
         android:title="@string/more_img_info"/>
-
-
 </menu>

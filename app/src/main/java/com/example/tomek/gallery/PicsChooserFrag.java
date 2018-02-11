@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -24,11 +25,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.example.tomek.gallery.database.DatabaseDescription;
-import com.example.tomek.gallery.database.GalleryDataBaseContentProvider;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 
 // TODO make this fragment's layout (XML) pretty : )
 //TODO make use on Bundle...
@@ -103,8 +103,11 @@ public class PicsChooserFrag extends Fragment {
 
              //   savePicToSD();
 
-                ImageSaver thread=new ImageSaver();//TODO pass them in constructor
-                thread.doInBackground(preview,getActivity(),relative);
+                ImageSaverThread thread=new ImageSaverThread(getActivity());
+                thread.execute(preview,relative);
+
+                //TODO we should notifyDAtaSetChanger to adapter for safety
+
             }
         });
 

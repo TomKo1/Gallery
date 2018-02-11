@@ -28,31 +28,30 @@ import java.io.FileOutputStream;
  */
 
 // Params, Progress, Result
-public class ImageSaver extends AsyncTask<Object,Void,Boolean> {
+public class ImageSaverThread extends AsyncTask<Object,Void,Boolean> {
 
-    public final String DIR_NAME_="/saved_images";
+    private final String DIR_NAME_="/saved_images";
 
+    private Activity activity; //TODO WeakReference ???
+
+    public ImageSaverThread(Activity activity){
+        this.activity=activity;
+    }
 
     // Result doInBackground(Params... params);
-
     @Override
     protected Boolean doInBackground(Object... voids) {
         ImageView preview=null;
-        Activity activity=null;
         RelativeLayout relative=null;
+
         if(voids[0] instanceof ImageView){
             preview=(ImageView)voids[0];
         }
-
-        if(voids[1] instanceof Activity){
-            activity=(Activity)voids[1];
+        if(voids[1] instanceof RelativeLayout){
+            relative=(RelativeLayout)voids[1];
         }
 
-        if(voids[2] instanceof RelativeLayout){
-            relative=(RelativeLayout)voids[2];
-        }
-
-        if( activity==null || preview == null || relative == null) return null;
+        if(preview == null || relative == null) return false;
 
 
         //getting BitMap from ImageView
@@ -67,7 +66,7 @@ public class ImageSaver extends AsyncTask<Object,Void,Boolean> {
         }catch(NullPointerException ex){
             ex.printStackTrace();
             Log.e("Error","NullPointerException while savign the Pic");
-            return null;
+            return false;
         }
 
         File dir=new File(root+DIR_NAME_);
@@ -91,15 +90,16 @@ public class ImageSaver extends AsyncTask<Object,Void,Boolean> {
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.e("PicsChooserFrag", "Error during saving to SD");
-            Toast.makeText(activity, "Error during saving - image not saved", Toast.LENGTH_SHORT).show();
-            return null;
+            return false;
         }
 
-        saveImgInfoToDb(root, fileNam,activity, relative);
-        return true;
+
+
+        return  saveImgInfoToDb(root, fileNam,activity, relative);
+
     }
 
-    private void saveImgInfoToDb(String root, String fileNam, Activity activity,RelativeLayout relative){
+    private boolean saveImgInfoToDb(String root, String fileNam, Activity activity,RelativeLayout relative){
         // we create URI referrimng to whole table
         Uri uri= DatabaseDescription.Picture.CONTENT_URI;
 
@@ -127,18 +127,21 @@ public class ImageSaver extends AsyncTask<Object,Void,Boolean> {
 
 
         contentResolver.insert(uri,values);
-        //TODO here update the view responsible for  showing all views
-        ViewUtils.showToast(activity,"Image saved");
+        Log.i("Image Saver: ","Image saved");
+        return true;
     }
 
 
 
 
     //void onPostExecute(Result result)
+    //on postExecute is executed in main thread - we can show a toast
     @Override
     public void onPostExecute(Boolean result){
         if(result){
-
+            ViewUtils.showToast(activity,"Image saved");
+        }else{
+            ViewUtils.showToast(activity,"Saving image error");
         }
     }
 }

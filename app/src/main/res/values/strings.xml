@@ -21,4 +21,5 @@
     <string name="more_img_info">More</string>
     <string name="search_device">...</string>
     <string name="created_by">Created by: https://github.com/TomKo1 </string>
+    <string name="delete_img">Delete</string>
 </resources>
