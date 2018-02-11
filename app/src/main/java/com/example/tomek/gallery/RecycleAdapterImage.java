@@ -1,15 +1,18 @@
 package com.example.tomek.gallery;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.tomek.gallery.database.DatabaseDescription;
 
 import java.io.File;
 import java.util.List;
@@ -104,7 +108,10 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
 
         //imageView.setImageBitmap(image);
         TextView textView=(TextView)cardView.findViewById(R.id.card_view_des);
-        textView.setText(description);//description
+        //textView.setText(description);//description
+        textView.setText(argsToShow.get(position).getFileName());
+        TextView textView2=(TextView)cardView.findViewById(R.id.card_view_text1);
+        textView2.setText(argsToShow.get(position).getDescription());
     }
 
 
@@ -153,21 +160,54 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
 
     private void deleteImg(int position){
 
+
+        removeImgFile(argsToShow.get(position).getFileName());
+        deleteFromDatabase(position);
         argsToShow.remove(position);
         notifyDataSetChanged();
-
-        removeImgFile(argsToShow.get(position).getPath());
-
-
-
     }
 
 
-    private void removeImgFile(String path){
+    private void removeImgFile(String fName){
 
+
+            //TODO change this strange construction
+        String root=null;
+        try {
+            root = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString();
+        }catch(NullPointerException ex){
+            ex.printStackTrace();
+            Log.e("Error","NullPointerException while deleting BitMap");
+        }
+
+
+
+
+        File dir=new File(root+"/saved_images");
+
+        File file=new File(dir,fName);
+       // ViewUtils.showToast(activity,fName);
+        ViewUtils.showToast(activity,"File exists?: "+file.exists());
+
+        boolean deletingRes=file.delete();
+        ViewUtils.showToast(activity,"Image deleting result: "+deletingRes);
+        ViewUtils.showToast(activity,"File exists?: "+file.exists());
     }
 
+    private void deleteFromDatabase(int position){
 
+        // we create URI referrimng to whole table
+        Uri uri= DatabaseDescription.Picture.CONTENT_URI;
+
+        String id=String.valueOf(position);
+
+        uri=uri.buildUpon().appendPath(id).build();
+
+        ContentResolver contentResolver=activity.getContentResolver();
+
+       int count= contentResolver.delete(uri,null,null);
+       ViewUtils.showToast(activity,"Deleted: "+count+" rows");
+    }
 
 
 

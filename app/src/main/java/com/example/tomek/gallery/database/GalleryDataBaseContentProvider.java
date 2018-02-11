@@ -165,14 +165,28 @@ public class GalleryDataBaseContentProvider extends ContentProvider {
 
     }
 
-    // TO:DO implement delete method !!!
+    // method for deleting from DB
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int delete(@NonNull Uri uri, @Nullable String where, @Nullable String[] whereArgs) {
+        int numbersOfRowsDeleted=0;
+        switch (uriMatcher.match(uri)) {
+            case ONE_PIC:
+                numbersOfRowsDeleted=dbHelper.getWritableDatabase().delete(DatabaseDescription.Picture.TABLE_NAME_,
+                       DatabaseDescription.Picture._ID+"="+uri.getLastPathSegment(),whereArgs);
+
+                break;
+            default:
+                unsupportedOperation();
+        }
+        if(numbersOfRowsDeleted>0){
+            getContext().getContentResolver().notifyChange(uri,null);
+        }
+        return numbersOfRowsDeleted;
     }
 
 
     //update previously saved pic
+    //update previously saved pics
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
 
@@ -180,7 +194,9 @@ public class GalleryDataBaseContentProvider extends ContentProvider {
 
         switch(uriMatcher.match(uri)){
             case ONE_PIC:
-                    numbersOfRowsUpdated=dbHelper.getWritableDatabase().update(DatabaseDescription.Picture.TABLE_NAME_,contentValues,DatabaseDescription.Picture._ID+"="+uri.getLastPathSegment(),strings);
+                    numbersOfRowsUpdated=dbHelper.getWritableDatabase().
+                            update(DatabaseDescription.Picture.TABLE_NAME_,contentValues,
+                                    DatabaseDescription.Picture._ID+"="+uri.getLastPathSegment(),strings);
                 break;
             default:
                 unsupportedOperation();
