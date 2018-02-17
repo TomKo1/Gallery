@@ -27,13 +27,21 @@ public class MyFunnyImg {
     private String name;
     private String description;
     private String fileName;
-//    private Activity activity;
+    private Integer _id;
+    //    private Activity activity;
 
-    public MyFunnyImg(String imgPath, String name, String description,String fileName) {
+    public Integer getId() {
+        return _id;
+    }
+
+
+
+    public MyFunnyImg(String imgPath, String name, String description,String fileName,Integer _id) {
         this.imgPath = imgPath;
         this.name = name;
         this.description = description;
         this.fileName=fileName;
+        this._id=_id;
         //this.activity=activity;
     }
 

@@ -93,7 +93,7 @@ public class ImageSaverThread extends AsyncTask<Object,Void,Boolean> {
             return false;
         }
 
-
+        Log.i("Saved to: ",root);
 
         return  saveImgInfoToDb(root, fileNam,activity, relative);
 

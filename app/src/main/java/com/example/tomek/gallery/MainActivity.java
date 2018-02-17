@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -226,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             ViewUtils.showToast(MainActivity.this,"picsChooser is null!");
                             picFragment=new PicsFragment();
                         }
+                       // Log.e("Adding fragment: ","PicsFragment");
                         addFragment(picFragment,"Gallery");
                         break;
                     case R.id.chooser:

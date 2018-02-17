@@ -174,6 +174,8 @@ public class GalleryDataBaseContentProvider extends ContentProvider {
                 numbersOfRowsDeleted=dbHelper.getWritableDatabase().delete(DatabaseDescription.Picture.TABLE_NAME_,
                        DatabaseDescription.Picture._ID+"="+uri.getLastPathSegment(),whereArgs);
 
+                Log.i("ContentProvider: ",uri.getLastPathSegment());
+
                 break;
             default:
                 unsupportedOperation();

@@ -157,14 +157,17 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
         }
         return true;
 }
-
+//TODO if this method is working good?
     private void deleteImg(int position){
 
-
-        removeImgFile(argsToShow.get(position).getFileName());
-        deleteFromDatabase(position);
+        MyFunnyImg temporaryImg=argsToShow.get(position);
+        removeImgFile(temporaryImg.getFileName());
+        deleteFromDatabase(temporaryImg.getId());
         argsToShow.remove(position);
         notifyDataSetChanged();
+       // notifyItemRemoved(position);
+        Toast.makeText(activity,"Ilosc ViewHolderow "+argsToShow.size(),Toast.LENGTH_SHORT).show();
+        //notifyItemRangeChanged(position,argsToShow.size());
     }
 
 
@@ -186,12 +189,13 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
         File dir=new File(root+"/saved_images");
 
         File file=new File(dir,fName);
-       // ViewUtils.showToast(activity,fName);
+
         ViewUtils.showToast(activity,"File exists?: "+file.exists());
 
         boolean deletingRes=file.delete();
         ViewUtils.showToast(activity,"Image deleting result: "+deletingRes);
         ViewUtils.showToast(activity,"File exists?: "+file.exists());
+
     }
 
     private void deleteFromDatabase(int position){
@@ -204,6 +208,8 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
         uri=uri.buildUpon().appendPath(id).build();
 
         ContentResolver contentResolver=activity.getContentResolver();
+
+        Log.i("deleteFromDatabase: ","Uri: "+uri);
 
        int count= contentResolver.delete(uri,null,null);
        ViewUtils.showToast(activity,"Deleted: "+count+" rows");
@@ -254,9 +260,10 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
 
 
         File dir=new File(root+"/saved_images");
-
+        Log.e("FileName:",toShow.getFileName());
         File file=new File(dir,toShow.getFileName());
         Glide.with(activity).load(file).into(imageView);
+
 
     }
 

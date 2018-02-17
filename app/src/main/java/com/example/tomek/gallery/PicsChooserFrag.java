@@ -90,7 +90,6 @@ public class PicsChooserFrag extends Fragment {
         btnChoose.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-
                 findPicInSystem();
 
             }
@@ -100,9 +99,9 @@ public class PicsChooserFrag extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-
-             //   savePicToSD();
-
+                //removint text from TextView
+                etName.setText("");
+                etDescription.setText("");
                 ImageSaverThread thread=new ImageSaverThread(getActivity());
                 thread.execute(preview,relative);
 
@@ -185,9 +184,12 @@ public class PicsChooserFrag extends Fragment {
         values.put(DatabaseDescription.Picture.COLUMN_DESCRIPTION,etDescription.getText().toString());
 
 
+
         contentResolver.insert(uri,values);
 
         Toast.makeText(getActivity(),"Image saved."+wholePath,Toast.LENGTH_LONG).show();
+
+
 
     }
 
