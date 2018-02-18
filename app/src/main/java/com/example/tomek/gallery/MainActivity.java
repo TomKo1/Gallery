@@ -1,12 +1,10 @@
 package com.example.tomek.gallery;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -21,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,27 +28,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//TODO show Frgment by clicking option in Drawer !!!
-//TODO add options of searching pic
-//TODO handle screen orientation changes
-//TODO add custo ListView in drawer with edittext to search
-//TODO !!!!! make optimatization while reading data from DB !!!!
-//TODO   !!! make loading work - images get mixed !!!!
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    // reference to NavigationView
     private NavigationView navigationView;
-    // reference to whole DrawerLayout containing ToolBar, mainFragment and ListView with drawer options
     private DrawerLayout wholeDrawer;
     private String[]titles; // array representing string shown in drawer
-    //ActionBarDrawerToggler provides a handy way to tie together the funcionallyty of DrawerLAyout and the framework ActionBar
-    //  "makes the hamburger work"
     private ActionBarDrawerToggle drawerToggle;
 
-    // we create fragment in MainActivity's onCreate method because of efficiency
-    //and if there is a change (for example image was inserted) we change them
-    private PicsFragment picFragment;
-    private PicsChooserFrag picsChooser;
+    private Fragment fragmentToAdd;
 
 
     @Override
@@ -59,40 +44,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        picFragment=new PicsFragment();
-        picsChooser=new PicsChooserFrag();
 
-        //reference to whole DrawerLayout
         wholeDrawer=(DrawerLayout)findViewById(R.id.drawerLayout);
-
-        //reference to NavigationView
         navigationView=(NavigationView)findViewById(R.id.drawer_list_view);
-
-        //listenr for NavigationView
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Toolbar options
-       Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
-        //displaying hamburger button
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // making the hamburger work
         drawerToggle=new ActionBarDrawerToggle(this,wholeDrawer,R.string.app_name,R.string.app_name){
 
             @Override
             public void onDrawerClosed(View drawerView){
                 super.onDrawerClosed(drawerView);
-                //invalidateOptionsMenu();
+
+                //   addFragment(fragmentToAdd,"123");
             }
+
+
 
             @Override
             public void onDrawerOpened(View drawerView){
-              //invalidateOptionsMenu();//declare that options menu has changed , so should be redeclared
-
-
                 //TODO modify so that keyboard is closed only when it is opened
 
                 ViewUtils.hideKeyBoard(MainActivity.this); //qualified this
@@ -103,10 +78,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         wholeDrawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
-
-        addFragment(new PicsFragment(),"Gallery"); //TODO this may cause some problems
+        fragmentToAdd=new PicsFragment();
+        addFragment(fragmentToAdd,"Gallery"); //TODO this may cause some problems
     }
-
 
 
 
@@ -141,24 +115,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-    // I created Handler to try to solve drawer lags
     private void addFragment(final Fragment fragmentToAdd, final String string){
-        Handler handler=new Handler();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                //we replace the fragment
                 FragmentTransaction fragTran=getFragmentManager().beginTransaction();
+                fragTran.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 fragTran.replace(R.id.main_fragment,fragmentToAdd,"fragment");
                 fragTran.addToBackStack(null);
-                //selects standard transaction animation for this transaction
-                fragTran.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 fragTran.commit();
                 ViewUtils.changeToolbarTitle(MainActivity.this,string);
-            }
-        });
 
-    }
+   }
 
 
     // this method places menu options to menu
@@ -211,51 +176,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-
     // I created Handler to try to solve drawer lags
     @Override
     public boolean onNavigationItemSelected(MenuItem item){
-        final int id=item.getItemId();
-        Handler handler=new Handler();
-        handler.post(new Runnable(){
-            @Override
-            public void run(){
+            int id=item.getItemId();
+            Handler handler=new Handler();
+            String nameOfFrag="Gallery";
                 switch(id){
                     case R.id.all_imgs:
-
-                        if(picFragment == null) {
-                            ViewUtils.showToast(MainActivity.this,"picsChooser is null!");
-                            picFragment=new PicsFragment();
-                        }
-                       // Log.e("Adding fragment: ","PicsFragment");
-                        addFragment(picFragment,"Gallery");
-                        break;
+                            fragmentToAdd=new PicsFragment();
+                            nameOfFrag="Main Gallery";
+                            break;
                     case R.id.chooser:
-                        if(picsChooser == null) {
-                            ViewUtils.showToast(MainActivity.this,"picsChooser is null!");
-                            picsChooser=new PicsChooserFrag();
-                        }
-                        addFragment(picsChooser,"Search in device");
-                        break;
+                            fragmentToAdd=new PicsChooserFrag();
+                            nameOfFrag="Searching device";
+                            break;
                     case R.id.searcher:
+                        nameOfFrag="Searching Internet";
                         openSearchingDialog();
                         break;
                     default:
                         Toast.makeText(MainActivity.this,"No such operation",Toast.LENGTH_SHORT).show();
                 }
+               if(!nameOfFrag.equals("Gallery")) addFragment(fragmentToAdd,nameOfFrag);
 
-            }});
-        wholeDrawer.closeDrawer(Gravity.LEFT);
+        // this delay may depend on the device the app runs but I tested it with
+        // few devices and it works better then placing it in onDrawerClose method and facing
+        // more visible (for user) loading problems
+        // some reference: https://vikrammnit.wordpress.com/2016/03/28/facing-navigation-drawer-item-onclick-lag/
+        // the delay is described in the end -> useful links to Stack also there
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                wholeDrawer.closeDrawer(Gravity.LEFT);
+
+            }
+        },25);
+
         return true;
     }
 
 
 
-    /*
-        called when activity start-ups is complete (after onStart() and onRestoreInstanceStete()
-
-
-     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -263,12 +225,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerToggle.syncState();
     }
 
-    /*
-        called by the system when thwe device configuration changes while your activity is running
-
-
-
-     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
