@@ -100,13 +100,13 @@ public class PicsChooserFrag extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                //removint text from TextView
+                String name=etName.getText().toString();
+                String description=etDescription.getText().toString();
                 etName.setText("");
                 etDescription.setText("");
-                ImageSaverThread thread=new ImageSaverThread(getActivity());
+                ImageSaverThread thread=new ImageSaverThread(getActivity(),name,description);
                 thread.execute(preview,relative);
 
-                //TODO we should notifyDAtaSetChanger to adapter for safety
 
             }
         });
@@ -240,6 +240,7 @@ public class PicsChooserFrag extends Fragment {
                 return ;
             }
             try {
+                //TODO rescale this bitmap --?
                 Bitmap image = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
 
                 preview.setImageBitmap(image);

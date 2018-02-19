@@ -24,7 +24,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 /**
- * Created by tomek on 10.02.2018.
+ *
+ * Class representing thread (task in Background) whic saved the Image
+ *
+ *
  */
 
 // Params, Progress, Result
@@ -33,9 +36,13 @@ public class ImageSaverThread extends AsyncTask<Object,Void,Boolean> {
     private final String DIR_NAME_="/saved_images";
 
     private Activity activity; //TODO WeakReference ???
+    private String name;
+    private String description;
 
-    public ImageSaverThread(Activity activity){
+    public ImageSaverThread(Activity activity,String name, String description){
         this.activity=activity;
+        this.name=name;
+        this.description=description;
     }
 
     // Result doInBackground(Params... params);
@@ -103,11 +110,6 @@ public class ImageSaverThread extends AsyncTask<Object,Void,Boolean> {
         // we create URI referrimng to whole table
         Uri uri= DatabaseDescription.Picture.CONTENT_URI;
 
-        EditText etName,etDescription;
-
-        etDescription=(EditText)relative.findViewById(R.id.image_description);
-        etName=(EditText)relative.findViewById(R.id.image_name);
-
         ContentResolver contentResolver=activity.getContentResolver();
 
 
@@ -116,14 +118,11 @@ public class ImageSaverThread extends AsyncTask<Object,Void,Boolean> {
 
         ContentValues values=new ContentValues();
 
-        //name - inserted by user in TextView
-        values.put(DatabaseDescription.Picture.COLUMN_PIC_NAME,etName.getText().toString());
-        //file Name...
+
+        values.put(DatabaseDescription.Picture.COLUMN_PIC_NAME,name);
         values.put(DatabaseDescription.Picture.COLUMN_FNAME,fileNam);
-        //path -> wholePath to read image from file system
         values.put(DatabaseDescription.Picture.COLUMN_PIC_PATH,wholePath);
-        //description - inserted by user in TextView
-        values.put(DatabaseDescription.Picture.COLUMN_DESCRIPTION,etDescription.getText().toString());
+        values.put(DatabaseDescription.Picture.COLUMN_DESCRIPTION,description);
 
 
         contentResolver.insert(uri,values);

@@ -42,8 +42,6 @@ import java.util.List;
 
 public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImage.ViewHolder>{
 
-    private int[]imageIDs;
-
     private List<MyFunnyImg> argsToShow;
 
     private Activity activity;
@@ -67,8 +65,6 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
     //TODO we need to pass here all names, desriptions, and Bitmaps from DB
     // constructor - to change !!!!!!!!!!!!!!!!!!!!!
     public RecycleAdapterImage(List<MyFunnyImg>argsToShow, Activity activity){
-        this.imageIDs=new int[10]; // fake 10 images...
-
 
         this.activity=activity;
         this.argsToShow=argsToShow;
@@ -106,10 +102,8 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
 
 
 
-        //imageView.setImageBitmap(image);
         TextView textView=(TextView)cardView.findViewById(R.id.card_view_des);
-        //textView.setText(description);//description
-        textView.setText(argsToShow.get(position).getFileName());
+        textView.setText(argsToShow.get(position).getName());
         TextView textView2=(TextView)cardView.findViewById(R.id.card_view_text1);
         textView2.setText(argsToShow.get(position).getDescription());
     }
@@ -167,9 +161,6 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
         //deleteFromDatabase(position);
         argsToShow.remove(position);
         notifyDataSetChanged();
-        notifyItemRemoved(position);
-        Toast.makeText(activity,"Ilosc ViewHolderow "+argsToShow.size(),Toast.LENGTH_SHORT).show();
-        notifyItemRangeChanged(position,argsToShow.size());
     }
 
 

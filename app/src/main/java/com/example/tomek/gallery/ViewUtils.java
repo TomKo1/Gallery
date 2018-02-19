@@ -21,12 +21,10 @@ import android.widget.Toast;
 /**
  *
  *
- * Utilities for views
+ * Utilities methods used all over the project
+ *
  *
  */
-
-
-//TODO change this class so that it is written in Kotlin
 
 public class ViewUtils {
 

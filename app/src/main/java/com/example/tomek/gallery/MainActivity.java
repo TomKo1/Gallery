@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Fragment fragmentToAdd;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +63,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDrawerClosed(View drawerView){
                 super.onDrawerClosed(drawerView);
 
-                //   addFragment(fragmentToAdd,"123");
+                progressDialog.show();
+
+                //  Google advices (and other users of StackOverflow) to wait with
+                // expensive actions till the drawer is closed -> that's why we are
+                // adding fragment after the drawer is closed
+                // some reference: https://vikrammnit.wordpress.com/2016/03/28/facing-navigation-drawer-item-onclick-lag/
+                // you can modify coments in  onNavigationItemSelected method and achive second version of solution
+                addFragment(fragmentToAdd,"123");
             }
 
 
@@ -112,18 +121,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialog.show();
     }
 
+/*
+private progressDialog progressDialog;
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+ */
 
 
 
-    private void addFragment(final Fragment fragmentToAdd, final String string){
-                FragmentTransaction fragTran=getFragmentManager().beginTransaction();
-                fragTran.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                fragTran.replace(R.id.main_fragment,fragmentToAdd,"fragment");
-                fragTran.addToBackStack(null);
-                fragTran.commit();
-                ViewUtils.changeToolbarTitle(MainActivity.this,string);
+    private void addFragment(final Fragment fragmentToAdd, final String string) {
+        FragmentTransaction fragTran = getFragmentManager().beginTransaction();
+        fragTran.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
-   }
+        fragTran.replace(R.id.main_fragment, fragmentToAdd, "fragment");
+        fragTran.addToBackStack(null);
+        fragTran.commit();
+
+
+        Toast.makeText(MainActivity.this, "Fragment added", Toast.LENGTH_SHORT).show();
+        ViewUtils.changeToolbarTitle(MainActivity.this, string);
+    }
 
 
     // this method places menu options to menu
@@ -180,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item){
             int id=item.getItemId();
-            Handler handler=new Handler();
+            //Handler handler=new Handler();
             String nameOfFrag="Gallery";
                 switch(id){
                     case R.id.all_imgs:
@@ -198,21 +218,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     default:
                         Toast.makeText(MainActivity.this,"No such operation",Toast.LENGTH_SHORT).show();
                 }
-               if(!nameOfFrag.equals("Gallery")) addFragment(fragmentToAdd,nameOfFrag);
+               //if(!nameOfFrag.equals("Gallery")) addFragment(fragmentToAdd,nameOfFrag);
 
-        // this delay may depend on the device the app runs but I tested it with
-        // few devices and it works better then placing it in onDrawerClose method and facing
-        // more visible (for user) loading problems
-        // some reference: https://vikrammnit.wordpress.com/2016/03/28/facing-navigation-drawer-item-onclick-lag/
-        // the delay is described in the end -> useful links to Stack also there
-        //TODO maybe change this to onDrawerClosed method with "loading screen"
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+
+        //handler.postDelayed(new Runnable() {
+           // @Override
+           // public void run() {
                 wholeDrawer.closeDrawer(Gravity.LEFT);
 
-            }
-        },25);
+          //  }
+       // },25);
 
         return true;
     }
