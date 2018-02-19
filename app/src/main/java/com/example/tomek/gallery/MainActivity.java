@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // more visible (for user) loading problems
         // some reference: https://vikrammnit.wordpress.com/2016/03/28/facing-navigation-drawer-item-onclick-lag/
         // the delay is described in the end -> useful links to Stack also there
+        //TODO maybe change this to onDrawerClosed method with "loading screen"
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {

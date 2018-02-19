@@ -17,7 +17,7 @@ public class DatabaseDescription {
     // base URi address tto makek contact with ContentProvider object
     private static final Uri BASE_CONTENT_URI=Uri.parse("content://"+AUTHORITY);
 
-    /*
+    /**
      * nested class describing the content of database
      *
      * BaseColumns provides names for the very commin _ID and _COUNT columns

@@ -80,7 +80,8 @@ public class PicsFragment extends Fragment {
         String fileName=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_FNAME));
         String description=cursor.getString(cursor.getColumnIndex(DatabaseDescription.Picture.COLUMN_DESCRIPTION));
         //TODO this is not needed we can accomplish this using recyclerview's position
-        Integer id=cursor.getColumnIndex("_id");
+        Integer id=cursor.getInt(cursor.getColumnIndex(DatabaseDescription.Picture._ID));
+
         funnyImagesList.add(new MyFunnyImg(path,name,description,fileName,id));
     }
 

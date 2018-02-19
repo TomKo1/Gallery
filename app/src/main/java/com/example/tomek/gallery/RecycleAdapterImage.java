@@ -86,7 +86,7 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
 
         MyFunnyImg toShow=argsToShow.get(position);
 
-        //TODO here I want to use Glide to load images
+
         //Bitmap image=argsToShow.get(position).loadBitmap(activity);
         loadBitmap(imageView,toShow);
 
@@ -94,7 +94,7 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
         //String name=toShow.getName();
 
 
-        //TODO ???
+        //TODO this may be the same as position
         final int position1=position;
 
         moreDots.setOnClickListener(new View.OnClickListener(){
@@ -162,12 +162,14 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
 
         MyFunnyImg temporaryImg=argsToShow.get(position);
         removeImgFile(temporaryImg.getFileName());
+        Toast.makeText(activity,"_id: "+temporaryImg.getId(),Toast.LENGTH_SHORT).show();
         deleteFromDatabase(temporaryImg.getId());
+        //deleteFromDatabase(position);
         argsToShow.remove(position);
         notifyDataSetChanged();
-       // notifyItemRemoved(position);
+        notifyItemRemoved(position);
         Toast.makeText(activity,"Ilosc ViewHolderow "+argsToShow.size(),Toast.LENGTH_SHORT).show();
-        //notifyItemRangeChanged(position,argsToShow.size());
+        notifyItemRangeChanged(position,argsToShow.size());
     }
 
 
@@ -190,11 +192,11 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
 
         File file=new File(dir,fName);
 
-        ViewUtils.showToast(activity,"File exists?: "+file.exists());
+        //ViewUtils.showToast(activity,"File exists?: "+file.exists());
 
         boolean deletingRes=file.delete();
-        ViewUtils.showToast(activity,"Image deleting result: "+deletingRes);
-        ViewUtils.showToast(activity,"File exists?: "+file.exists());
+        //ViewUtils.showToast(activity,"Image deleting result: "+deletingRes);
+        //ViewUtils.showToast(activity,"File exists?: "+file.exists());
 
     }
 
