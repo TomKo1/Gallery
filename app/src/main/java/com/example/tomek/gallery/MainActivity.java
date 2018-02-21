@@ -1,16 +1,22 @@
 package com.example.tomek.gallery;
 
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +36,10 @@ import android.widget.Toast;
 import com.example.tomek.gallery.fragments.PicsChooserFrag;
 import com.example.tomek.gallery.fragments.PicsFragment;
 
+import java.io.IOException;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -40,6 +50,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private Fragment fragmentToAdd;
 
+//TODO make 1 method for searching in Gallery
+
+
+
 
 
     @Override
@@ -47,11 +61,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         wholeDrawer=(DrawerLayout)findViewById(R.id.drawerLayout);
         navigationView=(NavigationView)findViewById(R.id.drawer_list_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -86,14 +98,86 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         };
 
+        configCircleImageView(navigationView.getHeaderView(0));
+
         wholeDrawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
         fragmentToAdd=new PicsFragment();
+
         addFragment(fragmentToAdd,"Gallery"); //TODO this may cause some problems
     }
 
+//TODO make 1 mehtod (implementation) from method which handles Images ...
+    private void configCircleImageView(View headerDrawerView){
+
+        CircleImageView circImgView = (CircleImageView)headerDrawerView.findViewById(R.id.img_circle);
+
+        circImgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // find View in
+                Toast.makeText(MainActivity.this,"Finding picture in gallery...",Toast.LENGTH_SHORT).show();
+                //we check if we have the permission
+                if(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+                    //we don't have permission - try to gain it
+                    ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1000);
+
+                }else {
+
+                    makeGalleryIntent();
+                }
+            }
+        }
+        );
+    }
+
+    //TODO understand this code
+    private void makeGalleryIntent(){
+
+        Intent galleryIntent=new Intent(Intent.ACTION_GET_CONTENT);
+
+        galleryIntent.setType("image/*");
+
+        if(galleryIntent.resolveActivity(this.getPackageManager())!=null) startActivityForResult(galleryIntent,1200);
+
+    }
 
 
+    @Override
+    public void onActivityResult(int requestCode,int resultCode,Intent data){
+
+
+
+        if(requestCode==1200 && resultCode==this.RESULT_OK){
+
+            //returns the Uri of the data this intent is targeting or null
+            Uri returnUri=data.getData();
+            if(returnUri==null){
+                Toast.makeText(this,"Some error occured",Toast.LENGTH_SHORT).show();
+                return ;
+            }
+            try {
+                //TODO rescale this bitmap --?
+                Bitmap image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), returnUri);
+
+                CircleImageView cirImgView=(CircleImageView)navigationView.findViewById(R.id.img_circle);
+                cirImgView.setImageBitmap(image);
+
+
+            }catch(IOException e){
+                e.printStackTrace();
+                Toast.makeText(this, "Some error occured", Toast.LENGTH_SHORT).show();
+                return ;
+            }
+
+        }else if(resultCode!=this.RESULT_OK){
+            Toast.makeText(this,"Some error", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this,"Sth else", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //TODO extract all string as resourcesx
 
     private void openSearchingDialog(){
        final Dialog dialog=new Dialog(this);     // 2 arg may be a style
@@ -122,14 +206,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialog.show();
     }
 
-/*
-private progressDialog progressDialog;
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Loading...");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.show();
- */
+//TODO add loading anim when fragment is not visible
 
 
 
