@@ -1,18 +1,22 @@
 package com.example.tomek.gallery;
 
-import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,14 +25,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+
 import com.example.tomek.gallery.database.DatabaseDescription;
+import com.example.tomek.gallery.fragments.ImageDetail;
 
 import java.io.File;
 import java.util.List;
@@ -41,6 +48,11 @@ import java.util.List;
  */
 
 public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImage.ViewHolder>{
+
+    // system "short" animation time duration used for "zooming" an image
+    private  int mShortAnimationDuration;
+    // holds a reference to the current animator
+    private Animator mCurrentAnimator;
 
     private List<MyFunnyImg> argsToShow;
 
@@ -57,17 +69,21 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
         //LayoutInflater creates a layout XML file into its corresponding View object
         //static from method obtains the LayoutInflater from the given context
         CardView newCardView=(CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.pic_card,parent,false);
+        ;
 
         return new ViewHolder(newCardView);
     }
 
 
+
+
+
     //TODO we need to pass here all names, desriptions, and Bitmaps from DB
     // constructor - to change !!!!!!!!!!!!!!!!!!!!!
     public RecycleAdapterImage(List<MyFunnyImg>argsToShow, Activity activity){
-
         this.activity=activity;
         this.argsToShow=argsToShow;
+        this.mShortAnimationDuration = activity.getResources().getInteger(android.R.integer.config_shortAnimTime);
     }
 
 
@@ -81,7 +97,7 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
         ImageView moreDots=holder.moreDots;
 
         MyFunnyImg toShow=argsToShow.get(position);
-
+        ImageView expandedImageView = holder.expandedImgView;
 
         //Bitmap image=argsToShow.get(position).loadBitmap(activity);
         loadBitmap(imageView,toShow);
@@ -93,12 +109,14 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
         //TODO this may be the same as position
         final int position1=position;
 
+        //TODO whis may be separate method
         moreDots.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 showPopUpMenu(view, imageView, position1);
             }
         });
+        setZoomingAction(imageView,toShow,expandedImageView);
 
 
 
@@ -108,6 +126,165 @@ public class RecycleAdapterImage extends RecyclerView.Adapter<RecycleAdapterImag
         textView2.setText(argsToShow.get(position).getDescription());
     }
 
+    private void setZoomingAction(final ImageView imgViewSmall,final MyFunnyImg toShow,final ImageView expandedImageView){
+
+
+        imgViewSmall.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                zoomImageFromThumb(imgViewSmall,toShow.getFileName(),expandedImageView);
+            }
+        });
+
+    }
+
+    private void zoomImageFromThumb(final ImageView imgViewSmall, String fileName, final ImageView expandedImageView){
+        // there is an animation in progress -> cancel it
+        if(mCurrentAnimator != null){
+            mCurrentAnimator.cancel();
+        }
+
+        // load expanded image to ImageView
+        String root=null;
+        try {
+            root = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString();
+        }catch(NullPointerException ex){
+            ex.printStackTrace();
+            Log.e("Error","NullPointerException while loeadin BitMap");
+        }
+
+
+
+
+        File dir=new File(root+"/saved_images");
+        Log.e("FileName:",fileName);
+        File file=new File(dir,fileName);
+        Glide.with(activity).load(file).centerCrop().into(expandedImageView);
+
+        // calculate the starting and ending bound for the zoomed-in img
+        final Rect startBounds = new Rect();
+        final Rect finalBounds = new Rect();
+        final Point globalOffset = new Point();
+
+        // starting -> global visible rectangle of the thumbnail (miniaturka)
+        // final -> global bound of the container (whole view?) -> recyclerView view
+        imgViewSmall.getGlobalVisibleRect(startBounds);
+        activity.findViewById(R.id.recyclerView).getGlobalVisibleRect(finalBounds,globalOffset);
+        startBounds.offset(-globalOffset.x, -globalOffset.y);
+        finalBounds.offset(-globalOffset.x, -globalOffset.y);
+
+
+        float startScale;
+        if ((float) finalBounds.width() / finalBounds.height()
+                > (float) startBounds.width() / startBounds.height()) {
+            // Extend start bounds horizontally
+            startScale = (float) startBounds.height() / finalBounds.height();
+            float startWidth = startScale * finalBounds.width();
+            float deltaWidth = (startWidth - startBounds.width()) / 2;
+            startBounds.left -= deltaWidth;
+            startBounds.right += deltaWidth;
+        } else {
+            // Extend start bounds vertically
+            startScale = (float) startBounds.width() / finalBounds.width();
+            float startHeight = startScale * finalBounds.height();
+            float deltaHeight = (startHeight - startBounds.height()) / 2;
+            startBounds.top -= deltaHeight;
+            startBounds.bottom += deltaHeight;
+        }
+
+        // hide (by setting alpha - channel) the thumbnail and show zoomed-in image
+        imgViewSmall.setAlpha(0f);
+        expandedImageView.setVisibility(View.VISIBLE);
+
+
+        //Set the pivot point for SCALE_X and SCALE_Y transformations
+        expandedImageView.setPivotX(0f);
+        expandedImageView.setPivotY(0f);
+
+
+
+
+        AnimatorSet set = new AnimatorSet();
+        set
+                .play(ObjectAnimator.ofFloat(expandedImageView, View.X,
+                        startBounds.left, finalBounds.left))
+                .with(ObjectAnimator.ofFloat(expandedImageView, View.Y,
+                        startBounds.top, finalBounds.top))
+                .with(ObjectAnimator.ofFloat(expandedImageView, View.SCALE_X,
+                        startScale, 1f)).with(ObjectAnimator.ofFloat(expandedImageView,
+                View.SCALE_Y, startScale, 1f));
+        set.setDuration(mShortAnimationDuration);
+        set.setInterpolator(new DecelerateInterpolator());
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mCurrentAnimator = null;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                mCurrentAnimator = null;
+            }
+        });
+        set.start();
+        mCurrentAnimator = set;
+
+
+
+        // Upon clicking the zoomed-in image, it should zoom back down
+        // to the original bounds and show the thumbnail instead of
+        // the expanded image.
+        final float startScaleFinal = startScale;
+        expandedImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCurrentAnimator != null) {
+                    mCurrentAnimator.cancel();
+                }
+
+                // Animate the four positioning/sizing properties in parallel,
+                // back to their original values.
+                AnimatorSet set = new AnimatorSet();
+                set.play(ObjectAnimator
+                        .ofFloat(expandedImageView, View.X, startBounds.left))
+                        .with(ObjectAnimator
+                                .ofFloat(expandedImageView,
+                                        View.Y,startBounds.top))
+                        .with(ObjectAnimator
+                                .ofFloat(expandedImageView,
+                                        View.SCALE_X, startScaleFinal))
+                        .with(ObjectAnimator
+                                .ofFloat(expandedImageView,
+                                        View.SCALE_Y, startScaleFinal));
+
+
+
+                set.setDuration(mShortAnimationDuration);
+                set.setInterpolator(new DecelerateInterpolator());
+                set.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        imgViewSmall.setAlpha(1f);
+                        expandedImageView.setVisibility(View.GONE);
+                        mCurrentAnimator = null;
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        imgViewSmall.setAlpha(1f);
+                        expandedImageView.setVisibility(View.GONE);
+                        mCurrentAnimator = null;
+                    }
+                });
+                set.start();
+                mCurrentAnimator = set;
+            }
+        });
+
+
+
+
+    }
 
 
 
@@ -139,9 +316,7 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
                 shareImgToSocMedia(bitmap);
                 break;
             case R.id.more_info:
-                ViewUtils.showToast(activity,"Showing more info");
-                Bitmap bitmap2=((BitmapDrawable)imageView.getDrawable()).getBitmap();
-                showMoreInfo(bitmap2);
+                showMoreInfo(position);
                 break;
             case R.id.delete_img:
                 deleteImg(position);
@@ -186,8 +361,6 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
         //ViewUtils.showToast(activity,"File exists?: "+file.exists());
 
         boolean deletingRes=file.delete();
-        //ViewUtils.showToast(activity,"Image deleting result: "+deletingRes);
-        //ViewUtils.showToast(activity,"File exists?: "+file.exists());
 
     }
 
@@ -208,12 +381,13 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
        ViewUtils.showToast(activity,"Deleted: "+count+" rows");
     }
 
+    private void showMoreInfo(int position){
 
-
-
-
-    private void showMoreInfo(Bitmap bitmap){
           ImageDetail nextFrag=new ImageDetail();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(ViewUtils.BUNDLE_DETAILS_KEY,argsToShow.get(position));
+            nextFrag.setArguments(bundle);
+
           activity.getFragmentManager().beginTransaction().
                   replace(R.id.main_fragment,nextFrag,"Details frag").
                   addToBackStack(null).
@@ -255,7 +429,10 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
         File dir=new File(root+"/saved_images");
         Log.e("FileName:",toShow.getFileName());
         File file=new File(dir,toShow.getFileName());
-        Glide.with(activity).load(file).into(imageView);
+        //although cetnerCrop may seem uneccessary it wasn't working good
+        // without ImageView without this
+        Glide.with(activity).load(file).centerCrop().into(imageView);
+
 
 
     }
@@ -281,6 +458,7 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
         private CardView cardView;  // our images are being displayed in CardView(s)
         private ImageView moreDots;
         private ImageView picture;
+        private ImageView expandedImgView;
 
         public ViewHolder(CardView itemView) {
             super(itemView);
@@ -288,6 +466,7 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
             cardView=itemView;
             moreDots=(ImageView)cardView.findViewById(R.id.picture_dots);
             picture=(ImageView)cardView.findViewById(R.id.picture);
+            expandedImgView=(ImageView)cardView.findViewById(R.id.expanded_image);
         }
     }
 

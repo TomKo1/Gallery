@@ -7,6 +7,7 @@
     android:tag="fragment"
     android:scrollbars="horizontal">
 
+
 </android.support.v7.widget.RecyclerView>
 
     <!-- XML defining whole (horizontal) RecyclerView -->

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.util.StringTokenizer;
 
 /**
@@ -21,7 +22,7 @@ import java.util.StringTokenizer;
  *
  */
 
-public class MyFunnyImg {
+public class MyFunnyImg implements Serializable{
 
     private String imgPath;
     private String name;

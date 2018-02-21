@@ -16,4 +16,7 @@
     <dimen name="card_view_height">160dp</dimen>
     <dimen name="dialog_width">300dp</dimen>
     <dimen name="dialog_height">150dp</dimen>
+    <dimen name="details_txt_elevationon">6dp</dimen>
+    <dimen name="txt_img_details">50dp</dimen>
+    <dimen name="txtimgdet_padding">10dp</dimen>
 </resources>

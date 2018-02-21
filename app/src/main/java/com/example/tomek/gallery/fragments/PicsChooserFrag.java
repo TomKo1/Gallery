@@ -1,4 +1,4 @@
-package com.example.tomek.gallery;
+package com.example.tomek.gallery.fragments;
 
 import android.Manifest;
 import android.app.Activity;
@@ -25,6 +25,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.example.tomek.gallery.ImageSaverThread;
+import com.example.tomek.gallery.R;
 import com.example.tomek.gallery.database.DatabaseDescription;
 
 import java.io.File;

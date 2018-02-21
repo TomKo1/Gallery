@@ -1,4 +1,4 @@
-package com.example.tomek.gallery;
+package com.example.tomek.gallery.fragments;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -13,6 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.tomek.gallery.MyFunnyImg;
+import com.example.tomek.gallery.R;
+import com.example.tomek.gallery.RecycleAdapterImage;
 import com.example.tomek.gallery.database.DatabaseDescription;
 
 import java.util.ArrayList;
