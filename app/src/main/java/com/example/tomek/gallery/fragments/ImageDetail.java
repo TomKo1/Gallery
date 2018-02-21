@@ -1,18 +1,17 @@
 package com.example.tomek.gallery.fragments;
 
+import android.support.v7.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.tomek.gallery.MyFunnyImg;
@@ -49,8 +48,32 @@ public class ImageDetail extends Fragment {
         imgDetails=(ImageView)wholeLayout.findViewById(R.id.img_details);
         initImgView();
 
-        Toast.makeText(getActivity(),"Image Details!",Toast.LENGTH_SHORT).show();
+
+        //hide ActionBar
+        manageActionBar(true);
+
+
+
         return wholeLayout;
+    }
+
+    private void manageActionBar(boolean hide){
+        //hide ActionBar
+        if(getActivity() instanceof AppCompatActivity){
+            ActionBar actionBar=(ActionBar)((AppCompatActivity)getActivity()).getSupportActionBar();
+
+            if(hide){
+                actionBar.hide();
+            }else{
+                actionBar.show();
+            }
+        }
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        manageActionBar(false);
     }
 
     // got practices of instantiate fragments

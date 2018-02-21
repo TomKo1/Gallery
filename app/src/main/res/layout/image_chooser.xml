@@ -23,7 +23,8 @@
             android:layout_marginBottom="35dp"
             android:hint="@string/image_description"
             android:imeOptions="actionDone"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:maxLength="75"/>
         <!-- maybe some tags??? -->
     </android.support.design.widget.TextInputLayout>
 
@@ -44,7 +45,8 @@
             android:hint="@string/hint_name"
             android:paddingTop="5dp"
             android:imeOptions="actionDone"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:maxLength="30"/>
 
     </android.support.design.widget.TextInputLayout>
 

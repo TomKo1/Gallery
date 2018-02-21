@@ -131,7 +131,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         );
     }
 
+    //TODO show how many letters is left in textview in iamgechooserfrag
     //TODO understand this code
+    //TODO save image so that it is visible after comming back to the app
     private void makeGalleryIntent(){
 
         Intent galleryIntent=new Intent(Intent.ACTION_GET_CONTENT);
