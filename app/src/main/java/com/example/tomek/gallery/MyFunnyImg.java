@@ -29,7 +29,6 @@ public class MyFunnyImg implements Serializable{
     private String description;
     private String fileName;
     private Integer _id;
-    //    private Activity activity;
 
     public Integer getId() {
         return _id;

@@ -38,4 +38,6 @@ dependencies {
     //circle ImageView
     //https://github.com/hdodenhof/CircleImageView
     compile 'de.hdodenhof:circleimageview:2.2.0'
+    // TextView counting letters
+    compile 'com.github.broakenmedia:CharCountTextView:v1.0'
 }

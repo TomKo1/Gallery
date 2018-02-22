@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.example.tomek.gallery.threads.ImageSaverThread;
 import com.example.tomek.gallery.R;
 import com.example.tomek.gallery.database.DatabaseDescription;
+import com.wafflecopter.charcounttextview.CharCountTextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -112,11 +113,29 @@ public class PicsChooserFrag extends Fragment {
             }
         });
 
+        CharCountTextView letterNameCount = (CharCountTextView)relative.findViewById(R.id.name_count_view);
+        configCharCountTextView(etName,letterNameCount);
+        CharCountTextView letterDescriptionCount  = (CharCountTextView)relative.findViewById(R.id.description_letters_count);
+        configCharCountTextView(etDescription,letterDescriptionCount);
+
 
 
 
         return relative;
     }
+
+
+    private void configCharCountTextView(EditText edText, CharCountTextView countView){
+        countView.setEditText(edText);
+        countView.setCharCountChangedListener(new CharCountTextView.CharCountChangedListener() {
+            @Override
+            public void onCountChanged(int i, boolean b) {
+                // default
+            }
+        });
+    }
+
+
 
     // saving pics to the SD's dir
     //TODO make this method shorter

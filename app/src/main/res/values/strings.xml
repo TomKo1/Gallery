@@ -22,4 +22,5 @@
     <string name="search_device">...</string>
     <string name="created_by">Created by: https://github.com/TomKo1 </string>
     <string name="delete_img">Delete</string>
+    <string name="sample_name">Sample User</string>
 </resources>

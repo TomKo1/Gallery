@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <!-- 60dp-->
     <android.support.design.widget.TextInputLayout
         android:id="@+id/frameLayout"
         android:layout_width="210dp"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:layout_alignLeft="@+id/pic_preview"
         android:layout_alignStart="@+id/pic_preview"
         android:layout_below="@+id/frameLayout2"
         android:layout_marginLeft="49dp"
         android:layout_marginStart="49dp"
         android:layout_marginTop="36dp">
-
         <EditText
             android:id="@+id/image_description"
             android:layout_width="@dimen/edit_text_width"
             android:layout_height="@dimen/edit_text_height"
+            android:lines="4"
+            android:maxLines="4"
             android:layout_marginBottom="35dp"
             android:hint="@string/image_description"
             android:imeOptions="actionDone"
-            android:inputType="text"
-            android:maxLength="75"/>
-        <!-- maybe some tags??? -->
+            android:inputType="text|textMultiLine"
+            android:maxLength="75" />
     </android.support.design.widget.TextInputLayout>
+
+    <com.wafflecopter.charcounttextview.CharCountTextView
+        android:id="@+id/description_letters_count"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@+id/frameLayout"
+        android:layout_marginBottom="13dp"
+        android:layout_toEndOf="@+id/frameLayout"
+        app:exceededTextColor="#FF0000"
+        app:maxCharacters="75" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/frameLayout2"
         android:layout_width="210dp"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:layout_alignLeft="@+id/frameLayout"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/frameLayout"
@@ -42,43 +53,53 @@
             android:layout_width="@dimen/edit_text_width"
             android:layout_height="@dimen/edit_text_height"
             android:layout_marginBottom="65dp"
+            android:lines="4"
+            android:maxLines="4"
             android:hint="@string/hint_name"
-            android:paddingTop="5dp"
             android:imeOptions="actionDone"
-            android:inputType="text"
-            android:maxLength="30"/>
+            android:inputType="text|textMultiLine"
+            android:maxLength="30"
+            android:paddingTop="5dp" />
 
     </android.support.design.widget.TextInputLayout>
+
+    <com.wafflecopter.charcounttextview.CharCountTextView
+        android:id="@+id/name_count_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/frameLayout"
+        android:layout_marginBottom="14dp"
+        android:layout_toEndOf="@+id/frameLayout2"
+        app:exceededTextColor="#FF0000"
+        app:maxCharacters="30" />
+
 
     <ImageView
         android:id="@+id/pic_preview"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/chose_pic"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/android"
-        android:layout_marginLeft="22dp"
-        android:layout_marginStart="22dp" />
+        android:layout_marginStart="24dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/android" />
 
     <Button
         android:id="@+id/chose_pic"
         android:layout_width="110dp"
         android:layout_height="45dp"
-        android:text="@string/search_device"
-        android:layout_alignLeft="@+id/pic_preview"
+        android:layout_above="@+id/save_pic"
         android:layout_alignStart="@+id/pic_preview"
-        android:layout_below="@+id/pic_preview"
-        android:layout_toLeftOf="@id/chose_pic"
-        android:layout_marginTop="13dp" />
+        android:text="@string/search_device" />
+
     <Button
         android:id="@+id/save_pic"
         android:layout_width="110dp"
         android:layout_height="45dp"
-        android:layout_alignRight="@id/chose_pic"
-        android:layout_below="@id/chose_pic"
-        android:text="@string/save_pic"
-        android:layout_marginTop="13dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/chose_pic"
+        android:layout_marginBottom="39dp"
+        android:text="@string/save_pic" />
 
 
 

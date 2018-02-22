@@ -29,6 +29,8 @@ import android.widget.Toast;
 public class ViewUtils {
 
 
+
+
     //TODO add here a method which changes the string on the TOOLBAR
 
     public static String BUNDLE_DETAILS_KEY = "Funny_img";

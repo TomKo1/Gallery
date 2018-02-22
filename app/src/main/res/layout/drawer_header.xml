@@ -27,17 +27,8 @@
             android:layout_height="wrap_content"
             android:textColor="#FFF"
             android:textSize="18sp"
-            android:text="@string/all_imgs"/>
-        <!-- I think I don't need this TextView -->
-        <!-- user will have only name -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FFF"
-            android:layout_marginTop="5dp"
-            android:textSize="15sp"
-            android:text="@string/some_long_sample_text"/>
-
+            android:maxLength="20"
+            android:text="@string/sample_name" />
     </LinearLayout>
 
 

@@ -36,6 +36,7 @@ import com.bumptech.glide.Glide;
 
 import com.example.tomek.gallery.database.DatabaseDescription;
 import com.example.tomek.gallery.fragments.ImageDetail;
+import com.example.tomek.gallery.threads.ImageDeleteThread;
 
 import java.io.File;
 import java.util.List;
@@ -319,7 +320,12 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
                 showMoreInfo(position);
                 break;
             case R.id.delete_img:
-                deleteImg(position);
+                //deleteImg(position);
+                //TODO I thnik it is not good idea to pass through constructor .. ..
+                ImageDeleteThread imgDeleteThr = new ImageDeleteThread(activity);
+                imgDeleteThr.execute(argsToShow.get(position),this);
+                //TODO we don't know when it is going to execute
+                notifyDataSetChanged();
                 break;
             default:
                 ViewUtils.showToast(activity,"No such option");
@@ -336,6 +342,10 @@ private boolean onSingleMenuItemClick(MenuItem item,ImageView imageView,int posi
         //deleteFromDatabase(position);
         argsToShow.remove(position);
         notifyDataSetChanged();
+    }
+
+    public void removeFromArgsList(MyFunnyImg toRemove){
+        argsToShow.remove(toRemove);
     }
 
 
