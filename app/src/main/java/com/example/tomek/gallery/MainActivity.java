@@ -2,7 +2,6 @@ package com.example.tomek.gallery;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
@@ -47,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout wholeDrawer;
     private String[]titles; // array representing string shown in drawer
     private ActionBarDrawerToggle drawerToggle;
-
+    private String currentFragmentName;
     private Fragment fragmentToAdd;
 
 //TODO make 1 method for searching in Gallery
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        currentFragmentName="Gallery";
         wholeDrawer=(DrawerLayout)findViewById(R.id.drawerLayout);
         navigationView=(NavigationView)findViewById(R.id.drawer_list_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // adding fragment after the drawer is closed
                 // some reference: https://vikrammnit.wordpress.com/2016/03/28/facing-navigation-drawer-item-onclick-lag/
                 // you can modify coments in  onNavigationItemSelected method and achive second version of solution
-                addFragment(fragmentToAdd,"123");
+                addFragment(fragmentToAdd,currentFragmentName);
             }
 
 
@@ -104,8 +103,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerToggle.syncState();
         fragmentToAdd=new PicsFragment();
 
-        addFragment(fragmentToAdd,"Gallery"); //TODO this may cause some problems
+        addFragment(fragmentToAdd,"Main Gallery"); //TODO this may cause some problems
     }
+
 
 //TODO make 1 mehtod (implementation) from method which handles Images ...
     private void configCircleImageView(View headerDrawerView){
@@ -285,14 +285,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switch(id){
                     case R.id.all_imgs:
                             fragmentToAdd=new PicsFragment();
-                            nameOfFrag="Main Gallery";
+                            currentFragmentName="Main Gallery";
                             break;
                     case R.id.chooser:
                             fragmentToAdd=new PicsChooserFrag();
-                            nameOfFrag="Searching device";
+                            currentFragmentName="Searching device";
                             break;
                     case R.id.searcher:
-                        nameOfFrag="Searching Internet";
                         openSearchingDialog();
                         break;
                     default:

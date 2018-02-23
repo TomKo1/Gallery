@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="#FAEEAE3F"
+    android:background="@drawable/background"
     android:paddingLeft="20dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:paddingRight="20dp"
     android:paddingTop="20dp">
-
-   <de.hdodenhof.circleimageview.CircleImageView
-       android:layout_width="80dp"
-       android:layout_height="80dp"
-       android:src="@drawable/unnamed"
-       android:id="@+id/img_circle"
-       android:layout_marginEnd="10dp"
-       android:scaleType="centerCrop"/>
+<!-- nav_bar_shape -->
+<!--  android:background="@drawable/nav_bar_shape" -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_circle"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_account_circle_black_24dp" />
+<!-- android:src="@drawable/unnamed"-->
     <LinearLayout
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#FFF"
-            android:textSize="18sp"
             android:maxLength="20"
-            android:text="@string/sample_name" />
+            android:text="@string/sample_name"
+            android:textColor="#FFF"
+            android:textSize="18sp" />
     </LinearLayout>
 
 
