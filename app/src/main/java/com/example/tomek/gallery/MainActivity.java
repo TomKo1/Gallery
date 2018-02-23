@@ -6,8 +6,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -25,15 +27,20 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tomek.gallery.fragments.PicsChooserFrag;
 import com.example.tomek.gallery.fragments.PicsFragment;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -48,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle drawerToggle;
     private String currentFragmentName;
     private Fragment fragmentToAdd;
+
 
 //TODO make 1 method for searching in Gallery
 
@@ -97,13 +105,109 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         };
 
-        configCircleImageView(navigationView.getHeaderView(0));
-
+        View drawerHeaderView = navigationView.getHeaderView(0);
+        ImageView changeNameImg = (ImageView)drawerHeaderView.findViewById(R.id.edit_user_name_sign);
+        TextView txtProfileName =  (TextView)drawerHeaderView.findViewById(R.id.profile_name);
+        configCircleImageView(drawerHeaderView);
+        configEditProfilNameImg(changeNameImg,txtProfileName);
+        // because this is the first activity (maybe we could do it in android.app.Application subclass)
+        // which starts whe set the profil's image bitmap here
+        configProfile(drawerHeaderView);
         wholeDrawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
         fragmentToAdd=new PicsFragment();
 
         addFragment(fragmentToAdd,"Main Gallery"); //TODO this may cause some problems
+    }
+
+
+    private void configEditProfilNameImg(ImageView changeNameImg,final TextView txtView){
+        changeNameImg.setOnClickListener(
+                new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        showPopUpMenu(v,txtView);
+                    }
+                }
+        );
+
+    }
+
+    private void showPopUpMenu(View v, final TextView txtView){
+        PopupMenu popup=new PopupMenu(this,v);
+
+        MenuInflater inflater=popup.getMenuInflater();
+
+        inflater.inflate(R.menu.name_change_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                showDialogEditingName(txtView);
+                return true;
+            }
+        });
+        popup.show();
+    }
+
+//TODO refactor code to avoid repetition
+    private void showDialogEditingName(final TextView txtView){
+        final Dialog dialog=new Dialog(this);     // 2 arg may be a style
+        dialog.setContentView(R.layout.searching_dialog);
+        dialog.setTitle("Change name");
+
+        Button okBtn=(Button)dialog.findViewById(R.id.searching_dial_OK);
+        Button canBtn=(Button)dialog.findViewById(R.id.searching_dial_Cancle);
+
+        okBtn.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                EditText edText=(EditText)dialog.findViewById(R.id.searching_phrase);
+                String stringName=edText.getText().toString();
+                if(stringName.isEmpty() || stringName.length()>20){
+                    Toast.makeText(MainActivity.this,"Name is not valid.",Toast.LENGTH_SHORT).show();
+                }else{
+                    txtView.setText(stringName);
+                    SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(PROFILE_NAME,stringName);
+                    editor.apply();
+                    dialog.dismiss();
+                }
+            }
+        });
+        canBtn.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
+
+
+
+    }
+
+
+
+    private void configProfile(View headerView){
+        CircleImageView cirImgView = (CircleImageView)headerView.findViewById(R.id.img_circle);
+
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String profileName = sharedPref.getString(PROFILE_NAME,null);
+        String base64Str = sharedPref.getString(PROFILE_PICTURE_KEY,null);
+        if(base64Str != null){
+            Bitmap bitmap = ViewUtils.decodeBase64(base64Str);
+            cirImgView.setImageBitmap(bitmap);
+        }
+        if(profileName != null){
+            TextView txtProfileName = (TextView)headerView.findViewById(R.id.profile_name);
+            txtProfileName.setText(profileName);
+        }
+
+
+
     }
 
 
@@ -144,6 +248,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public final String PROFILE_PICTURE_KEY= "profileImg";
+    public final String PROFILE_NAME="profileNam";
 
     @Override
     public void onActivityResult(int requestCode,int resultCode,Intent data){
@@ -163,8 +269,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Bitmap image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), returnUri);
 
                 CircleImageView cirImgView=(CircleImageView)navigationView.findViewById(R.id.img_circle);
-                cirImgView.setImageBitmap(image);
 
+
+                // I use SharedPreferences to practice -> normally I would put image into
+                // individual app's memory without this converting to String ;) (this may be ineffective)
+                // this is mainly because I found it interesting -> https://stackoverflow.com/questions/18072448/how-to-save-image-in-shared-preference-in-android-shared-preference-issue-in-a
+                //it is also 'logical' to use SharedPreferences to store user's individual data
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(PROFILE_PICTURE_KEY,ViewUtils.encodeTobase64(image));
+                editor.apply(); // apply makes commit to SharedPreferences in the background
+                cirImgView.setImageBitmap(image);
 
             }catch(IOException e){
                 e.printStackTrace();

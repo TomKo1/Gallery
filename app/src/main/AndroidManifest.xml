@@ -3,11 +3,11 @@
     package="com.example.tomek.gallery">
 
     <!-- OUR app (PicsChooserFrag uses gallery to find pics -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
-
+    <!-- To access Google+ APIs: -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -16,19 +16,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <provider
+            android:name=".database.GalleryDataBaseContentProvider"
             android:authorities="com.example.tomek.gallery.database"
-            android:name="com.example.tomek.gallery.database.GalleryDataBaseContentProvider"
-            android:exported="false"
-            android:enabled="true">
-        </provider>
+            android:enabled="true"
+            android:exported="false"></provider>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,8 +36,4 @@
         </activity>
     </application>
 
-</manifest>
-
-
-
-<!-- windowsSoftInputMode - adjustResize make room for the soft input keyboard -->
+</manifest> <!-- windowsSoftInputMode - adjustResize make room for the soft input keyboard -->

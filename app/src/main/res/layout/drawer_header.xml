@@ -1,39 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="@drawable/background"
-    android:paddingLeft="20dp"
+    android:columnCount="2"
+    android:rowCount="3"
+
+    android:background="@drawable/nav_bar_shape"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:paddingRight="20dp"
-    android:paddingTop="20dp">
+    >
 <!-- nav_bar_shape -->
 <!--  android:background="@drawable/nav_bar_shape" -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_circle"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginEnd="10dp"
+        android:layout_column="0"
+        android:layout_row="0"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_account_circle_black_24dp" />
 <!-- android:src="@drawable/unnamed"-->
-    <LinearLayout
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+        android:text="@string/sample_name"
+        android:id="@+id/profile_name"
+        android:layout_marginStart="20dp"
+        android:layout_column="0"
+        android:layout_row="2"
+        android:maxLength="20"
+        android:textColor="#000"
+        android:textSize="18sp" />
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_row="2"
+        android:layout_column="1"
+        android:src="@drawable/ic_edit_profile"
+        android:clickable="true"
+        android:id="@+id/edit_user_name_sign"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLength="20"
-            android:text="@string/sample_name"
-            android:textColor="#FFF"
-            android:textSize="18sp" />
-    </LinearLayout>
 
 
-
-</LinearLayout>
+</GridLayout>
